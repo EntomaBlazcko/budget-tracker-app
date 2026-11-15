@@ -1,1 +1,48 @@
-/* Tab bar styles (add later if needed). */
+ion-tab-bar {
+  --background: var(--tally-surface);
+  --color: var(--tally-ink-soft);
+  --color-selected: var(--tally-persimmon);
+  height: 62px;
+  padding-bottom: env(safe-area-inset-bottom);
+  border-top: 1.5px solid var(--tally-ink);
+}
+
+ion-tab-button {
+  --padding-top: 7px;
+  --padding-bottom: 5px;
+}
+
+ion-tab-button ion-icon {
+  font-size: 21px;
+}
+
+ion-tab-button ion-label {
+  margin-top: 3px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Center-docked add button. */
+.dock-fab {
+  position: fixed;
+  bottom: 36px;
+  left: 50%;
+  z-index: 20;
+  transform: translateX(-50%);
+}
+
+.dock-fab ion-fab-button {
+  --background: var(--tally-persimmon);
+  --color: var(--tally-ink);
+  --box-shadow: 3px 3px 0 var(--tally-ink);
+  --border-radius: 50%;
+  width: 58px;
+  height: 58px;
+  border: 1.5px solid var(--tally-ink);
+}
+
+.dock-fab ion-fab-button ion-icon {
+  font-size: 28px;
+}

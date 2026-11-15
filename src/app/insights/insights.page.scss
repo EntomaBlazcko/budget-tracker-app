@@ -1,0 +1,146 @@
+.section-note {
+  color: var(--tally-ink-soft);
+  font-size: 8px;
+  letter-spacing: 0.1em;
+}
+
+/* --------------------------------------------------------- Pie chart */
+
+.pie-card ion-card-content {
+  padding: 20px 16px;
+}
+
+.pie-wrap {
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: 4px 0;
+}
+
+.pie {
+  width: 230px;
+  height: 230px;
+  border: 1.5px solid var(--tally-ink);
+  border-radius: 50%;
+  background: conic-gradient(
+    var(--tally-cat-food) 0% 44.1%,
+    var(--tally-cat-transport) 44.1% 59.7%,
+    var(--tally-cat-bills) 59.7% 73.6%,
+    var(--tally-cat-fun) 73.6% 85.3%,
+    var(--tally-cat-health) 85.3% 89.6%,
+    var(--tally-cat-shopping) 89.6% 100%
+  );
+  box-shadow: 4px 4px 0 var(--tally-ink);
+}
+
+.pie-hole {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  width: 132px;
+  height: 132px;
+  margin: auto;
+  background: var(--tally-surface);
+  border: 1.5px solid var(--tally-ink);
+  border-radius: 50%;
+}
+
+.pie-total {
+  font-size: 19px;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+}
+
+.pie-range {
+  color: var(--tally-ink-soft);
+  font-size: 8px;
+  letter-spacing: 0.08em;
+}
+
+/* ------------------------------------------------------------ Legend */
+
+.legend-card {
+  padding-top: 2px;
+}
+
+.legend-list {
+  padding: 2px 14px;
+}
+
+.legend-item {
+  --min-height: 45px;
+}
+
+.legend-dot {
+  width: 12px;
+  height: 12px;
+  margin-right: 2px;
+  background: var(--cat, var(--tally-butter));
+  border: 1.5px solid var(--tally-ink);
+  border-radius: 50%;
+}
+
+.legend-name {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.legend-end {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.legend-amount {
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.legend-pct {
+  width: 40px;
+  color: var(--tally-ink-soft);
+  font-size: 9px;
+  text-align: right;
+}
+
+/* --------------------------------------------------------- Peak day */
+
+.peak-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.peak-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.peak-date {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.peak-amount {
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.peak-note {
+  margin: 0;
+  color: var(--tally-ink-soft);
+  font-size: 9px;
+  line-height: 1.6;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}

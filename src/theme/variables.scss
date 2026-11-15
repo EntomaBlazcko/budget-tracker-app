@@ -1,2 +1,99 @@
-// For information on how to create your own theme, please refer to:
-// https://ionicframework.com/docs/theming/
+// Tally — "Receipt Tape" theme. Light mode only.
+
+:root {
+  /* Palette */
+  --tally-paper: #fbf7ef;
+  --tally-surface: #ffffff;
+  --tally-ink: #1f2a24;
+  --tally-ink-soft: #7a7f73;
+  --tally-persimmon: #ff5a36;
+  --tally-mint: #2fbf9b;
+  --tally-butter: #ffd166;
+
+  /* Category colors */
+  --tally-cat-food: #ff5a36;
+  --tally-cat-transport: #4d7cfe;
+  --tally-cat-bills: #8e6cef;
+  --tally-cat-fun: #ffd166;
+  --tally-cat-health: #2fbf9b;
+  --tally-cat-shopping: #ff8fb1;
+
+  /* Type */
+  --font-display: 'Space Grotesk', 'Segoe UI', sans-serif;
+  --font-mono: 'DM Mono', 'Courier New', monospace;
+
+  /* Receipt primitives */
+  --tally-border: 1.5px solid var(--tally-ink);
+  --tally-shadow: 4px 4px 0 var(--tally-ink);
+  --tally-radius: 6px;
+
+  /* Ionic base */
+  --ion-background-color: var(--tally-paper);
+  --ion-background-color-rgb: 251, 247, 239;
+  --ion-text-color: var(--tally-ink);
+  --ion-text-color-rgb: 31, 42, 36;
+  --ion-font-family: var(--font-display);
+  --ion-color-step-50: #f6f2ea;
+  --ion-color-step-100: #efeade;
+
+  /* Primary — persimmon */
+  --ion-color-primary: #ff5a36;
+  --ion-color-primary-rgb: 255, 90, 54;
+  --ion-color-primary-contrast: #1f2a24;
+  --ion-color-primary-contrast-rgb: 31, 42, 36;
+  --ion-color-primary-shade: #e04f30;
+  --ion-color-primary-tint: #ff6b4a;
+
+  /* Secondary — mint */
+  --ion-color-secondary: #2fbf9b;
+  --ion-color-secondary-rgb: 47, 191, 155;
+  --ion-color-secondary-contrast: #1f2a24;
+  --ion-color-secondary-contrast-rgb: 31, 42, 36;
+  --ion-color-secondary-shade: #29a889;
+  --ion-color-secondary-tint: #44c5a5;
+
+  /* Tertiary — butter */
+  --ion-color-tertiary: #ffd166;
+  --ion-color-tertiary-rgb: 255, 209, 102;
+  --ion-color-tertiary-contrast: #1f2a24;
+  --ion-color-tertiary-contrast-rgb: 31, 42, 36;
+  --ion-color-tertiary-shade: #e0b85a;
+  --ion-color-tertiary-tint: #ffd675;
+
+  /* Success / warning / danger */
+  --ion-color-success: #2fbf9b;
+  --ion-color-success-rgb: 47, 191, 155;
+  --ion-color-success-contrast: #1f2a24;
+  --ion-color-success-contrast-rgb: 31, 42, 36;
+  --ion-color-success-shade: #29a889;
+  --ion-color-success-tint: #44c5a5;
+
+  --ion-color-warning: #ffd166;
+  --ion-color-warning-rgb: 255, 209, 102;
+  --ion-color-warning-contrast: #1f2a24;
+  --ion-color-warning-contrast-rgb: 31, 42, 36;
+  --ion-color-warning-shade: #e0b85a;
+  --ion-color-warning-tint: #ffd675;
+
+  --ion-color-danger: #ff5a36;
+  --ion-color-danger-rgb: 255, 90, 54;
+  --ion-color-danger-contrast: #1f2a24;
+  --ion-color-danger-contrast-rgb: 31, 42, 36;
+  --ion-color-danger-shade: #e04f30;
+  --ion-color-danger-tint: #ff6b4a;
+
+  /* Neutrals */
+  --ion-color-medium: #7a7f73;
+  --ion-color-medium-rgb: 122, 127, 115;
+  --ion-color-medium-contrast: #ffffff;
+  --ion-color-medium-contrast-rgb: 255, 255, 255;
+  --ion-color-medium-shade: #6b7065;
+  --ion-color-medium-tint: #878c81;
+
+  --ion-color-dark: #1f2a24;
+  --ion-color-dark-rgb: 31, 42, 36;
+  --ion-color-dark-contrast: #ffffff;
+  --ion-color-dark-contrast-rgb: 255, 255, 255;
+  --ion-color-dark-shade: #1b251f;
+  --ion-color-dark-tint: #353f3a;
+}

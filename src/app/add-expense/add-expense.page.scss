@@ -1,0 +1,191 @@
+.add-pad {
+  padding-top: 8px;
+}
+
+/* --------------------------------------------------------------- Amount */
+
+.amount-card ion-card-content {
+  padding: 16px 16px 12px;
+}
+
+.amount-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  margin: 6px 0 4px;
+}
+
+.peso {
+  font-size: 26px;
+  font-weight: 500;
+}
+
+.amount-input {
+  width: 225px;
+  min-height: 58px;
+  font-family: var(--font-mono);
+  font-size: 44px;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  --color: var(--tally-ink);
+  --padding-start: 2px;
+  --padding-end: 0;
+  --padding-top: 0;
+  --padding-bottom: 0;
+}
+
+.amount-input::part(native) {
+  font-family: var(--font-mono);
+  font-size: 44px;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+}
+
+.amount-hint {
+  display: block;
+  color: var(--tally-ink-soft);
+  font-size: 8px;
+  letter-spacing: 0.1em;
+  text-align: center;
+}
+
+/* ---------------------------------------------------------------- Fields */
+
+.field-block {
+  margin-top: 18px;
+}
+
+.field-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  color: var(--tally-ink-soft);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.field-label::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: var(--tally-persimmon);
+}
+
+.chip-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  padding: 2px;
+}
+
+.stamp-chip {
+  height: 30px;
+  min-height: 30px;
+  padding: 0 10px;
+  font-size: 10px;
+  transform: rotate(-2deg);
+}
+
+.stamp-chip.selected {
+  color: var(--tally-ink);
+  background: var(--cat);
+  border-width: 2px;
+  box-shadow: 2px 2px 0 var(--tally-ink);
+  transform: rotate(1.5deg);
+}
+
+/* Note input */
+.tally-field {
+  --background: var(--tally-surface);
+  --color: var(--tally-ink);
+  --padding-start: 12px;
+  --padding-end: 12px;
+  min-height: 46px;
+  font-size: 13px;
+  border: var(--tally-border);
+  border-radius: var(--tally-radius);
+  box-shadow: 3px 3px 0 var(--tally-ink);
+}
+
+/* Date */
+.date-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px;
+}
+
+.date-box > ion-icon {
+  flex: 0 0 auto;
+  color: var(--tally-persimmon);
+  font-size: 18px;
+}
+
+.date-box ion-datetime-button {
+  flex: 1;
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+.date-box ion-datetime-button::part(native) {
+  width: 100%;
+  padding: 6px 2px;
+  color: var(--tally-ink);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  text-align: left;
+  background: transparent;
+}
+
+/* --------------------------------------------------------------- Buttons */
+
+.scan-btn {
+  --background: transparent;
+  --background-hover: rgba(255, 90, 54, 0.06);
+  --border-width: 0;
+  --box-shadow: none;
+  --color: var(--tally-ink);
+  height: 48px;
+  margin: 22px 0 0;
+  border: 1.5px dashed var(--tally-ink);
+  border-radius: var(--tally-radius);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.scan-btn ion-icon {
+  font-size: 18px;
+}
+
+.save-btn {
+  --background: var(--tally-persimmon);
+  --background-hover: #ff6b4a;
+  --border-color: var(--tally-ink);
+  --border-radius: var(--tally-radius);
+  --border-style: solid;
+  --border-width: 1.5px;
+  --box-shadow: 4px 4px 0 var(--tally-ink);
+  --color: var(--tally-ink);
+  height: 54px;
+  margin: 22px 0 0;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.save-note {
+  margin: 14px 0 0;
+  color: var(--tally-ink-soft);
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  text-align: center;
+  text-transform: uppercase;
+}

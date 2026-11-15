@@ -1,0 +1,169 @@
+.budget-pad {
+  padding: 4px 16px calc(76px + env(safe-area-inset-bottom));
+}
+
+.budget-intro {
+  margin: 6px 2px 18px;
+  color: var(--tally-ink-soft);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  line-height: 1.7;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.envelope {
+  position: relative;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+/* Folded top-right corner, like a paper envelope. */
+.envelope::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-top: 22px solid #f2ecdf;
+  border-left: 22px solid transparent;
+  pointer-events: none;
+}
+
+.envelope-over {
+  border-color: var(--tally-persimmon);
+}
+
+.envelope ion-card-content {
+  padding: 14px;
+}
+
+.env-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  padding-right: 14px;
+}
+
+.env-identity {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.env-name {
+  font-size: 16px;
+  line-height: 1.1;
+}
+
+.env-no {
+  display: block;
+  margin-top: 3px;
+  color: var(--tally-ink-soft);
+  font-size: 8px;
+  letter-spacing: 0.1em;
+}
+
+.used-badge {
+  --background: transparent;
+  --color: var(--tally-ink);
+  padding: 3px 5px;
+  border: 1.5px solid var(--tally-ink);
+  border-radius: 3px;
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+.env-figures {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin: 12px 0 7px;
+}
+
+.env-spent {
+  font-size: 19px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.env-limit {
+  color: var(--tally-ink-soft);
+  font-size: 10px;
+}
+
+.env-bar {
+  --background: #ece5d8;
+  height: 10px;
+  border-radius: 4px;
+}
+
+.env-bar.cat-food {
+  --progress-background: var(--tally-cat-food);
+}
+
+.env-bar.cat-transport {
+  --progress-background: var(--tally-cat-transport);
+}
+
+.env-bar.cat-bills {
+  --progress-background: var(--tally-cat-bills);
+}
+
+.env-bar.cat-fun {
+  --progress-background: var(--tally-cat-fun);
+}
+
+.env-bar.cat-health {
+  --progress-background: var(--tally-cat-health);
+}
+
+.env-bar.cat-shopping {
+  --progress-background: var(--tally-cat-shopping);
+}
+
+.env-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 11px;
+}
+
+.status-stamp {
+  padding: 3px 6px;
+  border: 1.5px solid var(--tally-ink);
+  border-radius: 3px;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  transform: rotate(-1.5deg);
+}
+
+.status-stamp.ok {
+  color: #1c8f75;
+  border-color: #1c8f75;
+}
+
+.status-stamp.almost {
+  background: var(--tally-butter);
+  border-color: var(--tally-ink);
+}
+
+.status-stamp.over {
+  color: var(--tally-persimmon);
+  background: #fff0ec;
+  border-color: var(--tally-persimmon);
+  font-weight: 500;
+  transform: rotate(-3deg);
+}
+
+.env-caption {
+  color: var(--tally-ink-soft);
+  font-size: 7px;
+  letter-spacing: 0.1em;
+}

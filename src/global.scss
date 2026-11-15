@@ -1,37 +1,316 @@
 /*
- * App Global CSS
- * ----------------------------------------------------------------------------
- * Put style rules here that you want to apply globally. These styles are for
- * the entire app and not just one component. Additionally, this file can be
- * used as an entry point to import other CSS/Sass files to be included in the
- * output CSS.
- * For more information on global stylesheets, visit the documentation:
- * https://ionicframework.com/docs/layout/global-stylesheets
+ * Tally — global receipt-tape styles.
+ * Fonts, paper/ink tokens and small shared utilities live here.
  */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 /* Core CSS required for Ionic components to work properly */
-@import "@ionic/angular/css/core.css";
+@import '@ionic/angular/css/core.css';
 
 /* Basic CSS for apps built with Ionic */
-@import "@ionic/angular/css/normalize.css";
-@import "@ionic/angular/css/structure.css";
-@import "@ionic/angular/css/typography.css";
-@import "@ionic/angular/css/display.css";
+@import '@ionic/angular/css/normalize.css';
+@import '@ionic/angular/css/structure.css';
+@import '@ionic/angular/css/typography.css';
+@import '@ionic/angular/css/display.css';
 
 /* Optional CSS utils that can be commented out */
-@import "@ionic/angular/css/padding.css";
-@import "@ionic/angular/css/float-elements.css";
-@import "@ionic/angular/css/text-alignment.css";
-@import "@ionic/angular/css/text-transformation.css";
-@import "@ionic/angular/css/flex-utils.css";
+@import '@ionic/angular/css/padding.css';
+@import '@ionic/angular/css/float-elements.css';
+@import '@ionic/angular/css/text-alignment.css';
+@import '@ionic/angular/css/text-transformation.css';
+@import '@ionic/angular/css/flex-utils.css';
 
-/**
- * Ionic Dark Mode
- * -----------------------------------------------------
- * For more info, please see:
- * https://ionicframework.com/docs/theming/dark-mode
- */
+/* Light theme only — dark palette intentionally not imported. */
 
-/* @import "@ionic/angular/css/palettes/dark.always.css"; */
-/* @import "@ionic/angular/css/palettes/dark.class.css"; */
-/* @import "@ionic/angular/css/palettes/dark.system.css"; */
+html {
+  color-scheme: light;
+}
+
+body {
+  background: var(--tally-paper);
+  color: var(--tally-ink);
+  font-family: var(--font-display);
+}
+
+ion-content {
+  --background: var(--tally-paper);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  color: var(--tally-ink);
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* ---------------------------------------------------------------- Type */
+
+.mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+}
+
+/* Ionic 9 renders the native input in light DOM, so target it globally. */
+ion-input.mono {
+  --ion-font-family: var(--font-mono);
+  font-family: var(--font-mono);
+}
+
+ion-input.mono input.native-input {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.money {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.eyebrow {
+  display: block;
+  color: var(--tally-ink-soft);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* Highlighter swipe behind the lower half of a number. */
+.highlight {
+  padding: 0 0.08em;
+  background-image: linear-gradient(transparent 56%, var(--tally-butter) 56%, var(--tally-butter) 94%, transparent 94%);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+.text-mint {
+  color: var(--tally-mint);
+}
+
+.text-persimmon {
+  color: var(--tally-persimmon);
+}
+
+.text-muted {
+  color: var(--tally-ink-soft);
+}
+
+/* --------------------------------------------------------------- Cards */
+
+.tally-card {
+  --background: var(--tally-surface);
+  margin: 0;
+  background: var(--tally-surface);
+  color: var(--tally-ink);
+  border: var(--tally-border);
+  border-radius: var(--tally-radius);
+  box-shadow: var(--tally-shadow);
+}
+
+.tally-card ion-card-content {
+  padding: 16px;
+}
+
+/* -------------------------------------------------------------- Header */
+
+.tally-header ion-toolbar {
+  --background: var(--tally-paper);
+  --border-width: 0;
+  --min-height: 56px;
+  --padding-start: 16px;
+  --padding-end: 16px;
+}
+
+.tally-header ion-title {
+  padding: 0;
+  font-family: var(--font-display);
+  font-size: 23px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.header-note {
+  color: var(--tally-ink-soft);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* --------------------------------------------------------------- Layout */
+
+.page-pad {
+  padding: 4px 16px calc(28px + env(safe-area-inset-bottom));
+}
+
+/* Tab pages need extra room so the docked FAB never covers the last line. */
+.dock-clear {
+  padding-bottom: calc(76px + env(safe-area-inset-bottom));
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 22px 0 10px;
+}
+
+.section-title {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.see-all {
+  --color: var(--tally-persimmon);
+  --padding-start: 4px;
+  --padding-end: 4px;
+  height: 28px;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.dashed-rule {
+  margin: 12px 0;
+  border: 0;
+  border-top: 1.5px dashed rgba(31, 42, 36, 0.3);
+}
+
+/* --------------------------------------------------------- Category chips */
+
+.cat-food {
+  --cat: var(--tally-cat-food);
+}
+
+.cat-transport {
+  --cat: var(--tally-cat-transport);
+}
+
+.cat-bills {
+  --cat: var(--tally-cat-bills);
+}
+
+.cat-fun {
+  --cat: var(--tally-cat-fun);
+}
+
+.cat-health {
+  --cat: var(--tally-cat-health);
+}
+
+.cat-shopping {
+  --cat: var(--tally-cat-shopping);
+}
+
+.cat-income {
+  --cat: var(--tally-mint);
+}
+
+.cat-box {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  color: var(--tally-ink);
+  background: var(--cat, var(--tally-butter));
+  border: var(--tally-border);
+  border-radius: 6px;
+}
+
+.cat-box ion-icon {
+  font-size: 18px;
+}
+
+/* Rubber-stamp category chip. */
+.stamp-chip {
+  --background: transparent;
+  --color: var(--tally-ink);
+  height: 21px;
+  min-height: 21px;
+  margin: 0;
+  padding: 0 7px;
+  border: 1.5px solid var(--tally-ink);
+  border-left: 4px solid var(--cat, var(--tally-ink));
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transform: rotate(-2deg);
+}
+
+/* -------------------------------------------------------------- Segment */
+
+.tally-segment {
+  --background: var(--tally-surface);
+  width: calc(100% - 32px);
+  margin: 2px 16px 14px;
+  padding: 3px;
+  border: var(--tally-border);
+  border-radius: var(--tally-radius);
+  box-shadow: 3px 3px 0 var(--tally-ink);
+}
+
+.tally-segment ion-segment-button {
+  --color: var(--tally-ink-soft);
+  --color-checked: var(--tally-ink);
+  --indicator-color: var(--tally-butter);
+  --border-radius: 4px;
+  min-width: 0;
+  min-height: 32px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* --------------------------------------------------------------- Lists */
+
+.receipt-list {
+  padding: 0;
+  background: transparent;
+}
+
+.receipt-list ion-item {
+  --background: transparent;
+  --color: var(--tally-ink);
+  --border-width: 0;
+  --inner-border-width: 0;
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  --min-height: 60px;
+  font-family: var(--font-display);
+  border-bottom: 1px dashed rgba(31, 42, 36, 0.24);
+}
+
+.receipt-list ion-item:last-child,
+.receipt-list ion-item-sliding:last-child ion-item {
+  border-bottom: 0;
+}
+
+.receipt-list ion-label {
+  margin: 8px 0;
+}
+
+/* ----------------------------------------------------------- Progress bar */
+
+.tally-progress {
+  --background: #ece5d8;
+  --progress-background: var(--tally-persimmon);
+  height: 7px;
+  border-radius: 4px;
+}

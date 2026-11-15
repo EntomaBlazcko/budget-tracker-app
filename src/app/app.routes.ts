@@ -1,37 +1,37 @@
 import type { Routes } from '@angular/router';
 
 export const routes: Routes = [
-  // Add/Edit lives outside the tabs, so it opens as a full-screen page.
+  // Add expense sits outside the tab shell so it opens full-screen.
   {
-    path: 'transactions/new',
-    loadComponent: () => import('./transaction-form/transaction-form.page').then((m) => m.TransactionFormPage),
-  },
-  {
-    path: 'transactions/:id/edit',
-    loadComponent: () => import('./transaction-form/transaction-form.page').then((m) => m.TransactionFormPage),
+    path: 'add-expense',
+    loadComponent: () => import('./add-expense/add-expense.page').then((m) => m.AddExpensePage),
   },
 
-  // Tab shell: Dashboard, Transactions, Budget.
+  // Tab shell: Home, Activity, Budgets, Insights.
   {
     path: '',
     loadComponent: () => import('./tabs/tabs.page').then((m) => m.TabsPage),
     children: [
       {
         path: '',
-        redirectTo: 'dashboard',
+        redirectTo: 'home',
         pathMatch: 'full',
       },
       {
-        path: 'dashboard',
-        loadComponent: () => import('./dashboard/dashboard.page').then((m) => m.DashboardPage),
+        path: 'home',
+        loadComponent: () => import('./home/home.page').then((m) => m.HomePage),
       },
       {
-        path: 'transactions',
-        loadComponent: () => import('./transactions/transactions.page').then((m) => m.TransactionsPage),
+        path: 'activity',
+        loadComponent: () => import('./activity/activity.page').then((m) => m.ActivityPage),
       },
       {
-        path: 'budget',
-        loadComponent: () => import('./budget/budget.page').then((m) => m.BudgetPage),
+        path: 'budgets',
+        loadComponent: () => import('./budgets/budgets.page').then((m) => m.BudgetsPage),
+      },
+      {
+        path: 'insights',
+        loadComponent: () => import('./insights/insights.page').then((m) => m.InsightsPage),
       },
     ],
   },

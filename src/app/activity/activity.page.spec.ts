@@ -1,14 +1,14 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 
-import { TransactionFormPage } from './transaction-form.page';
+import { ActivityPage } from './activity.page';
 
-describe('TransactionFormPage', () => {
-  let component: TransactionFormPage;
-  let fixture: ComponentFixture<TransactionFormPage>;
+describe('ActivityPage', () => {
+  let component: ActivityPage;
+  let fixture: ComponentFixture<ActivityPage>;
 
   beforeEach(async () => {
-    fixture = TestBed.createComponent(TransactionFormPage);
+    fixture = TestBed.createComponent(ActivityPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

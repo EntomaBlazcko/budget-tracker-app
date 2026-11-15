@@ -1,0 +1,119 @@
+.activity-pad {
+  padding: 0 16px calc(76px + env(safe-area-inset-bottom));
+}
+
+.day-head {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 4px 7px;
+  background: var(--tally-paper);
+}
+
+.day-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+}
+
+.day-count {
+  color: var(--tally-ink-soft);
+  font-size: 8px;
+  letter-spacing: 0.1em;
+}
+
+.day-sheet {
+  margin-bottom: 6px;
+  overflow: hidden;
+}
+
+.day-list {
+  padding: 0 14px;
+}
+
+.tx-item {
+  --min-height: 64px;
+}
+
+.item-name {
+  margin: 0 0 4px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.item-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.item-date {
+  overflow: hidden;
+  color: var(--tally-ink-soft);
+  font-size: 8px;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.end-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+  padding-left: 8px;
+}
+
+.item-amount {
+  font-size: 12px;
+  font-weight: 500;
+  text-align: right;
+}
+
+.item-amount.income {
+  color: var(--tally-mint);
+}
+
+.item-note {
+  color: var(--tally-ink-soft);
+  font-size: 8px;
+  white-space: nowrap;
+}
+
+/* Swipe actions */
+ion-item-options {
+  border-left: 1.5px solid var(--tally-ink);
+}
+
+ion-item-option {
+  width: 78px;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+}
+
+ion-item-option.opt-edit {
+  --background: var(--tally-butter);
+  --color: var(--tally-ink);
+}
+
+ion-item-option.opt-delete {
+  --background: var(--tally-persimmon);
+  --color: var(--tally-ink);
+}
+
+.opt-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+}
+
+.opt-inner ion-icon {
+  font-size: 19px;
+}

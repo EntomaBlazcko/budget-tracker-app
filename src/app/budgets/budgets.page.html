@@ -1,0 +1,44 @@
+<ion-header class="tally-header">
+  <ion-toolbar>
+    <ion-title>Budgets</ion-title>
+    <ion-note slot="end" class="header-note mono">₱30,000 / MO</ion-note>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="budget-pad">
+    <p class="budget-intro">Six paper envelopes, one monthly allowance. Tear one open only when you need it.</p>
+
+    @for (envelope of envelopes; track envelope.name) {
+    <ion-card class="tally-card envelope" [class.envelope-over]="envelope.state === 'over'">
+      <ion-card-content>
+        <div class="env-head">
+          <div class="env-identity">
+            <div [class]="'cat-box ' + envelope.categoryClass">
+              <ion-icon [name]="envelope.icon" aria-hidden="true"></ion-icon>
+            </div>
+            <div>
+              <h2 class="env-name">{{ envelope.name }}</h2>
+              <span class="env-no mono">{{ envelope.number }}</span>
+            </div>
+          </div>
+
+          <ion-badge class="used-badge mono">{{ envelope.used }}</ion-badge>
+        </div>
+
+        <div class="env-figures mono">
+          <span class="env-spent">{{ envelope.spent }}</span>
+          <span class="env-limit">/ {{ envelope.limit }}</span>
+        </div>
+
+        <ion-progress-bar [value]="envelope.percent" [class]="'env-bar ' + envelope.categoryClass"></ion-progress-bar>
+
+        <div class="env-foot">
+          <span [class]="'status-stamp mono ' + envelope.state">{{ envelope.status }}</span>
+          <span class="env-caption mono">SPENT THIS MONTH</span>
+        </div>
+      </ion-card-content>
+    </ion-card>
+    }
+  </div>
+</ion-content>

@@ -1,0 +1,71 @@
+<ion-header class="tally-header">
+  <ion-toolbar>
+    <ion-title>Activity</ion-title>
+    <ion-note slot="end" class="header-note mono">NOV 2026</ion-note>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-segment value="all" class="tally-segment">
+    <ion-segment-button value="all">
+      <ion-label>All</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="expenses">
+      <ion-label>Expenses</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="income">
+      <ion-label>Income</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <div class="activity-pad">
+    @for (day of days; track day.label) {
+    <div class="day-head">
+      <span class="day-label mono">{{ day.label }}</span>
+      <span class="day-count mono">{{ day.items.length }} ITEMS</span>
+    </div>
+
+    <div class="day-sheet tally-card">
+      <ion-list lines="none" class="receipt-list day-list">
+        @for (tx of day.items; track tx.merchant) {
+        <ion-item-sliding>
+          <ion-item class="tx-item">
+            <div slot="start" [class]="'cat-box ' + tx.categoryClass">
+              <ion-icon [name]="tx.icon" aria-hidden="true"></ion-icon>
+            </div>
+
+            <ion-label>
+              <h2 class="item-name">{{ tx.merchant }}</h2>
+              <div class="item-meta">
+                <ion-chip [class]="'stamp-chip ' + tx.categoryClass">{{ tx.category }}</ion-chip>
+                <ion-note class="mono item-date">{{ tx.date }}</ion-note>
+              </div>
+            </ion-label>
+
+            <div slot="end" class="end-col">
+              <span class="item-amount mono" [class.income]="tx.income">{{ tx.amount }}</span>
+              <ion-note class="mono item-note">{{ tx.note }}</ion-note>
+            </div>
+          </ion-item>
+
+          <ion-item-options side="end">
+            <ion-item-option class="opt-edit">
+              <div class="opt-inner">
+                <ion-icon name="create-outline" aria-hidden="true"></ion-icon>
+                <span>Edit</span>
+              </div>
+            </ion-item-option>
+            <ion-item-option class="opt-delete">
+              <div class="opt-inner">
+                <ion-icon name="trash-outline" aria-hidden="true"></ion-icon>
+                <span>Delete</span>
+              </div>
+            </ion-item-option>
+          </ion-item-options>
+        </ion-item-sliding>
+        }
+      </ion-list>
+    </div>
+    }
+  </div>
+</ion-content>

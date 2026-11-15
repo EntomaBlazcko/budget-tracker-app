@@ -1,0 +1,198 @@
+.home-bar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px 0 6px;
+}
+
+.greeting h1 {
+  margin-top: 4px;
+  font-size: 28px;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.brand-stamp {
+  padding: 5px 8px;
+  color: var(--tally-persimmon);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  border: 1.5px solid var(--tally-persimmon);
+  border-radius: 3px;
+  transform: rotate(-4deg);
+}
+
+/* ----------------------------------------------------- Balance receipt */
+
+.balance-wrap {
+  margin-top: 8px;
+  filter: drop-shadow(4px 4px 0 var(--tally-ink));
+}
+
+.balance-card {
+  --background: var(--tally-surface);
+  --tear: 10px;
+  margin: 0;
+  overflow: visible;
+  background: var(--tally-surface);
+  border: 1.5px solid var(--tally-ink);
+  border-bottom: 0;
+  border-radius: 6px 6px 0 0;
+  box-shadow: none;
+  -webkit-mask:
+    linear-gradient(#000 0 0) top / 100% calc(100% - var(--tear)) no-repeat,
+    conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / 18px var(--tear) repeat-x;
+  mask:
+    linear-gradient(#000 0 0) top / 100% calc(100% - var(--tear)) no-repeat,
+    conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / 18px var(--tear) repeat-x;
+}
+
+.balance-body {
+  padding: 16px 16px 22px;
+}
+
+.balance-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.receipt-no {
+  color: var(--tally-ink-soft);
+  font-size: 8px;
+  letter-spacing: 0.12em;
+}
+
+.balance-amount-row {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  margin: 8px 0 16px;
+}
+
+.peso {
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.balance-amount {
+  font-size: clamp(36px, 10vw, 43px);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.balance-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+  color: var(--tally-ink-soft);
+  font-size: 10px;
+  letter-spacing: 0.02em;
+}
+
+.balance-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* --------------------------------------------------------- Mini totals */
+
+.mini-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.mini-card ion-card-content {
+  padding: 12px;
+}
+
+.mini-income {
+  border-top-width: 5px;
+  border-top-color: var(--tally-mint);
+}
+
+.mini-expense {
+  border-top-width: 5px;
+  border-top-color: var(--tally-persimmon);
+}
+
+.mini-amount {
+  display: block;
+  margin-top: 6px;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  text-align: left;
+}
+
+/* ------------------------------------------------------------- Recent */
+
+.recent-card {
+  padding-top: 2px;
+}
+
+.recent-list {
+  padding: 2px 14px;
+}
+
+.receipt-item {
+  --min-height: 60px;
+}
+
+.item-name {
+  margin: 0 0 4px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.item-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.item-date {
+  overflow: hidden;
+  color: var(--tally-ink-soft);
+  font-size: 8px;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.end-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding-left: 8px;
+}
+
+.item-amount {
+  font-size: 12px;
+  font-weight: 500;
+  text-align: right;
+}
+
+.item-amount.income {
+  color: var(--tally-mint);
+}
+
+.receipt-foot {
+  padding: 8px 0 12px;
+  color: var(--tally-ink-soft);
+  font-size: 8px;
+  letter-spacing: 0.18em;
+  text-align: center;
+}

@@ -1,0 +1,97 @@
+<ion-header class="tally-header">
+  <ion-toolbar>
+    <div class="home-bar">
+      <div class="greeting">
+        <span class="eyebrow">{{ month }}</span>
+        <h1>Hi there 👋</h1>
+      </div>
+      <div class="brand-stamp mono" aria-hidden="true">TALLY</div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="page-pad dock-clear">
+    <!-- Balance receipt -->
+    <div class="balance-wrap">
+      <ion-card class="balance-card">
+        <ion-card-content class="balance-body">
+          <div class="balance-head">
+            <span class="eyebrow">Left to spend</span>
+            <span class="mono receipt-no">LEDGER · 0042</span>
+          </div>
+
+          <div class="balance-amount-row">
+            <span class="peso mono">₱</span>
+            <span class="balance-amount mono highlight">18,450.00</span>
+          </div>
+
+          <ion-progress-bar class="tally-progress" [value]="0.62"></ion-progress-bar>
+
+          <div class="balance-meta mono">
+            <span>₱11,550 spent</span>
+            <span>of ₱30,000</span>
+          </div>
+
+          <hr class="dashed-rule" />
+
+          <div class="balance-foot mono">
+            <span>62% of monthly budget</span>
+            <span class="text-muted">NOV 1–30</span>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <!-- Income / expenses -->
+    <div class="mini-grid">
+      <ion-card class="tally-card mini-card mini-income">
+        <ion-card-content>
+          <span class="eyebrow">Income</span>
+          <span class="mini-amount mono text-mint">+₱42,000</span>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="tally-card mini-card mini-expense">
+        <ion-card-content>
+          <span class="eyebrow">Expenses</span>
+          <span class="mini-amount mono text-persimmon">-₱23,550</span>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <!-- Recent -->
+    <div class="section-head">
+      <h2 class="section-title">Recent</h2>
+      <ion-button fill="clear" size="small" class="see-all" routerLink="/activity">
+        See all
+        <ion-icon slot="end" name="arrow-forward"></ion-icon>
+      </ion-button>
+    </div>
+
+    <ion-card class="tally-card recent-card">
+      <ion-list lines="none" class="receipt-list recent-list">
+        @for (item of recent; track item.merchant) {
+        <ion-item class="receipt-item">
+          <div slot="start" [class]="'cat-box ' + item.categoryClass">
+            <ion-icon [name]="item.icon" aria-hidden="true"></ion-icon>
+          </div>
+
+          <ion-label>
+            <h2 class="item-name">{{ item.merchant }}</h2>
+            <div class="item-meta">
+              <ion-chip [class]="'stamp-chip ' + item.categoryClass">{{ item.category }}</ion-chip>
+              <ion-note class="mono item-date">{{ item.date }}</ion-note>
+            </div>
+          </ion-label>
+
+          <div slot="end" class="end-col">
+            <span class="item-amount mono" [class.income]="item.income">{{ item.amount }}</span>
+          </div>
+        </ion-item>
+        }
+      </ion-list>
+      <div class="receipt-foot mono">— END OF RECEIPT —</div>
+    </ion-card>
+  </div>
+</ion-content>
