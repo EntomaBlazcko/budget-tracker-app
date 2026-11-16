@@ -1,17 +1,17 @@
 <ion-header class="tally-header">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/home" text=""></ion-back-button>
+      <ion-back-button [defaultHref]="backHref" text=""></ion-back-button>
     </ion-buttons>
-    <ion-title>New expense</ion-title>
-    <ion-note slot="end" class="header-note mono">DRAFT</ion-note>
+    <ion-title>{{ pageTitle }}</ion-title>
+    <ion-note slot="end" class="header-note mono">{{ isEditing ? 'EDITING' : 'DRAFT' }}</ion-note>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <div class="page-pad add-pad">
     <!-- Amount -->
-    <ion-card class="tally-card amount-card">
+    <ion-card class="tally-card amount-card" [class.field-invalid]="amountError !== null">
       <ion-card-content>
         <span class="eyebrow">Amount</span>
 
@@ -21,13 +21,19 @@
             class="amount-input mono"
             inputmode="decimal"
             placeholder="0.00"
-            value="285.00"
             aria-label="Expense amount"
+            [formControl]="form.controls.amount"
+            (ionBlur)="markAmountTouched()"
           ></ion-input>
         </div>
 
         <hr class="dashed-rule" />
+
+        @if (amountError) {
+        <p class="field-error mono" role="alert">{{ amountError }}</p>
+        } @else {
         <span class="amount-hint mono">PHP · TAP THE NUMBER TO EDIT</span>
+        }
       </ion-card-content>
     </ion-card>
 
@@ -35,13 +41,24 @@
     <div class="field-block">
       <span class="field-label mono">Category</span>
       <div class="chip-grid">
-        <ion-chip class="stamp-chip cat-food selected">Food</ion-chip>
-        <ion-chip class="stamp-chip cat-transport">Transport</ion-chip>
-        <ion-chip class="stamp-chip cat-bills">Bills</ion-chip>
-        <ion-chip class="stamp-chip cat-fun">Fun</ion-chip>
-        <ion-chip class="stamp-chip cat-health">Health</ion-chip>
-        <ion-chip class="stamp-chip cat-shopping">Shopping</ion-chip>
+        @for (category of categoryOptions; track category) {
+        <ion-chip
+          [class]="chipClass(category)"
+          role="button"
+          tabindex="0"
+          [attr.aria-pressed]="form.controls.category.value === category"
+          (click)="selectCategory(category)"
+          (keydown.enter)="selectCategory(category, $event)"
+          (keydown.space)="selectCategory(category, $event)"
+        >
+          {{ category }}
+        </ion-chip>
+        }
       </div>
+
+      @if (categoryError) {
+      <p class="field-error mono" role="alert">{{ categoryError }}</p>
+      }
     </div>
 
     <!-- Note -->
@@ -50,8 +67,8 @@
       <ion-input
         class="tally-field mono"
         placeholder="What was this for?"
-        value="Lunch at Jollibee"
         aria-label="Note"
+        [formControl]="form.controls.note"
       ></ion-input>
     </div>
 
@@ -66,7 +83,12 @@
       <!-- Ionic 9 no longer has a compact datetime, so the picker opens in a modal. -->
       <ion-modal [keepContentsMounted]="true">
         <ng-template>
-          <ion-datetime id="expense-date" presentation="date" [value]="today"></ion-datetime>
+          <ion-datetime
+            id="expense-date"
+            presentation="date"
+            [value]="form.controls.date.value"
+            (ionChange)="onDateChange($event)"
+          ></ion-datetime>
         </ng-template>
       </ion-modal>
     </div>
@@ -77,8 +99,16 @@
       Scan receipt
     </ion-button>
 
-    <ion-button expand="block" class="save-btn" routerLink="/home">Save expense</ion-button>
+    <ion-button expand="block" class="save-btn" [disabled]="submitting() || loading()" (click)="save()">
+      {{ saveLabel }}
+    </ion-button>
 
-    <p class="save-note mono">Saved to the November ledger · not a real transaction</p>
+    @if (saveError()) {
+    <p class="field-error save-error mono" role="alert">{{ saveError() }}</p>
+    }
+
+    <p class="save-note mono">
+      {{ isEditing ? 'Editing an existing ledger entry' : 'Saved to the ledger · stored on this device' }}
+    </p>
   </div>
 </ion-content>
