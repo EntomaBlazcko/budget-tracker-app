@@ -1,5 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import {
+  IonAlert,
+  IonCard,
+  IonCardContent,
   IonChip,
   IonContent,
   IonHeader,
@@ -14,37 +18,128 @@ import {
   IonSegment,
   IonSegmentButton,
   IonTitle,
+  IonToast,
   IonToolbar,
 } from '@ionic/angular';
+import type { AlertButton, SegmentCustomEvent } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import {
   carOutline,
-  cartOutline,
   cashOutline,
+  cartOutline,
   createOutline,
   fastFoodOutline,
+  flashOutline,
   medicalOutline,
   playCircleOutline,
-  storefrontOutline,
+  receiptOutline,
   trashOutline,
-  flashOutline,
-  phonePortraitOutline,
 } from 'ionicons/icons';
 
-interface Transaction {
-  merchant: string;
+import { categoryStyle } from '../models/category.model';
+import type { Transaction } from '../models/transaction.model';
+import { TransactionService } from '../services/transaction.service';
+
+type TransactionFilter = 'all' | 'expenses' | 'income';
+
+interface TransactionRow {
+  id: string;
+  title: string;
   category: string;
   categoryClass: string;
   icon: string;
-  note: string;
-  date: string;
+  location?: string;
   amount: string;
-  income?: boolean;
+  income: boolean;
 }
 
 interface TransactionDay {
+  date: string;
   label: string;
-  items: Transaction[];
+  rows: TransactionRow[];
+}
+
+const MONTHS = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+
+const peso = new Intl.NumberFormat('en-PH', {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});
+
+function formatAmount(transaction: Transaction): string {
+  const sign = transaction.type === 'income' ? '+' : '-';
+  return `${sign}₱${peso.format(transaction.amount)}`;
+}
+
+function toRow(transaction: Transaction): TransactionRow {
+  const style = categoryStyle(transaction.category);
+
+  return {
+    id: transaction.id,
+    title: transaction.note.trim() || transaction.category,
+    category: transaction.category,
+    categoryClass: style.colorClass,
+    icon: style.icon,
+    location: transaction.location?.trim() || undefined,
+    amount: formatAmount(transaction),
+    income: transaction.type === 'income',
+  };
+}
+
+function isoDate(date: Date): string {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(
+    2,
+    '0',
+  )}`;
+}
+
+function dayLabel(date: string, now = new Date()): string {
+  if (date === isoDate(now)) {
+    return 'TODAY';
+  }
+
+  const yesterday = new Date(now);
+  yesterday.setDate(yesterday.getDate() - 1);
+  if (date === isoDate(yesterday)) {
+    return 'YESTERDAY';
+  }
+
+  const [year, month, day] = date.split('-').map(Number);
+  if (!year || !month || !day) {
+    return date;
+  }
+
+  const label = `${MONTHS[month - 1]} ${day}`;
+  return year === now.getFullYear() ? label : `${label}, ${year}`;
+}
+
+function formatMonth(date: Date): string {
+  return `${MONTHS[date.getMonth()]} ${date.getFullYear()}`;
+}
+
+function groupByDay(transactions: Transaction[], filter: TransactionFilter): TransactionDay[] {
+  const groups = new Map<string, TransactionRow[]>();
+
+  for (const transaction of transactions) {
+    if (filter === 'expenses' && transaction.type !== 'expense') {
+      continue;
+    }
+    if (filter === 'income' && transaction.type !== 'income') {
+      continue;
+    }
+
+    const row = toRow(transaction);
+    const rows = groups.get(transaction.date);
+    if (rows) {
+      rows.push(row);
+    } else {
+      groups.set(transaction.date, [row]);
+    }
+  }
+
+  return [...groups.entries()]
+    .sort(([left], [right]) => right.localeCompare(left))
+    .map(([date, rows]) => ({ date, label: dayLabel(date), rows }));
 }
 
 @Component({
@@ -60,6 +155,8 @@ interface TransactionDay {
     IonSegment,
     IonSegmentButton,
     IonLabel,
+    IonCard,
+    IonCardContent,
     IonList,
     IonItemSliding,
     IonItem,
@@ -67,136 +164,104 @@ interface TransactionDay {
     IonItemOption,
     IonIcon,
     IonChip,
+    IonAlert,
+    IonToast,
   ],
 })
 export class ActivityPage {
-  readonly days: TransactionDay[] = [
-    {
-      label: 'TODAY',
-      items: [
-        {
-          merchant: 'Jollibee',
-          category: 'Food',
-          categoryClass: 'cat-food',
-          icon: 'fast-food-outline',
-          note: 'Lunch',
-          date: 'NOV 15 · 12:40 PM',
-          amount: '-₱285.00',
-        },
-        {
-          merchant: 'Grab',
-          category: 'Transport',
-          categoryClass: 'cat-transport',
-          icon: 'car-outline',
-          note: 'Ride home',
-          date: 'NOV 15 · 6:12 PM',
-          amount: '-₱180.00',
-        },
-        {
-          merchant: '7-Eleven',
-          category: 'Food',
-          categoryClass: 'cat-food',
-          icon: 'storefront-outline',
-          note: 'Iced coffee',
-          date: 'NOV 15 · 8:05 AM',
-          amount: '-₱92.50',
-        },
-      ],
-    },
-    {
-      label: 'YESTERDAY',
-      items: [
-        {
-          merchant: 'SM Supermarket',
-          category: 'Shopping',
-          categoryClass: 'cat-shopping',
-          icon: 'cart-outline',
-          note: 'Groceries',
-          date: 'NOV 14 · 5:30 PM',
-          amount: '-₱1,845.50',
-        },
-        {
-          merchant: 'GCash transfer',
-          category: 'Bills',
-          categoryClass: 'cat-bills',
-          icon: 'phone-portrait-outline',
-          note: 'Load + transfer',
-          date: 'NOV 14 · 9:18 AM',
-          amount: '-₱500.00',
-        },
-      ],
-    },
-    {
-      label: 'NOV 12',
-      items: [
-        {
-          merchant: 'Netflix',
-          category: 'Fun',
-          categoryClass: 'cat-fun',
-          icon: 'play-circle-outline',
-          note: 'Monthly plan',
-          date: 'NOV 12 · 7:00 AM',
-          amount: '-₱549.00',
-        },
-        {
-          merchant: 'Mercury Drug',
-          category: 'Health',
-          categoryClass: 'cat-health',
-          icon: 'medical-outline',
-          note: 'Vitamins',
-          date: 'NOV 12 · 1:24 PM',
-          amount: '-₱430.00',
-        },
-        {
-          merchant: 'Shopee order',
-          category: 'Shopping',
-          categoryClass: 'cat-shopping',
-          icon: 'cart-outline',
-          note: 'Desk lamp',
-          date: 'NOV 12 · 3:45 PM',
-          amount: '-₱1,120.00',
-        },
-      ],
-    },
-    {
-      label: 'NOV 11',
-      items: [
-        {
-          merchant: 'Meralco bill',
-          category: 'Bills',
-          categoryClass: 'cat-bills',
-          icon: 'flash-outline',
-          note: 'Electricity',
-          date: 'NOV 11 · 10:00 AM',
-          amount: '-₱2,340.00',
-        },
-        {
-          merchant: 'Salary deposit',
-          category: 'Income',
-          categoryClass: 'cat-income',
-          icon: 'cash-outline',
-          note: 'Payroll',
-          date: 'NOV 11 · 8:00 AM',
-          amount: '+₱42,000.00',
-          income: true,
-        },
-      ],
-    },
+  private readonly transactions = inject(TransactionService);
+  private readonly router = inject(Router);
+
+  readonly filter = signal<TransactionFilter>('all');
+  readonly entries = signal<Transaction[]>([]);
+  readonly loaded = signal(false);
+  readonly pendingDelete = signal<TransactionRow | null>(null);
+  readonly toastOpen = signal(false);
+  readonly toastMessage = signal('');
+
+  readonly monthLabel = formatMonth(new Date());
+  readonly deleteButtons: AlertButton[] = [
+    { text: 'Keep', role: 'cancel' },
+    { text: 'Delete', role: 'destructive' },
   ];
+
+  readonly days = computed(() => groupByDay(this.entries(), this.filter()));
+
+  readonly deleteMessage = computed(() => {
+    const row = this.pendingDelete();
+    return row ? `${row.title} · ${row.amount} will be removed from the ledger.` : '';
+  });
+
+  readonly emptyTitle = computed(() =>
+    this.entries().length === 0 ? 'No transactions yet' : 'Nothing in this filter',
+  );
+
+  readonly emptyCopy = computed(() =>
+    this.entries().length === 0
+      ? 'Tap the + button to write the first line in your ledger.'
+      : 'Try another segment above.',
+  );
 
   constructor() {
     addIcons({
       fastFoodOutline,
       carOutline,
-      storefrontOutline,
-      cartOutline,
-      phonePortraitOutline,
-      playCircleOutline,
-      medicalOutline,
-      flashOutline,
       cashOutline,
+      cartOutline,
       createOutline,
+      flashOutline,
+      medicalOutline,
+      playCircleOutline,
+      receiptOutline,
       trashOutline,
     });
+  }
+
+  async ionViewWillEnter(): Promise<void> {
+    await this.reload();
+  }
+
+  setFilter(event: SegmentCustomEvent): void {
+    const value = event.detail.value;
+    if (value === 'all' || value === 'expenses' || value === 'income') {
+      this.filter.set(value);
+    }
+  }
+
+  async edit(row: TransactionRow, sliding: IonItemSliding): Promise<void> {
+    await sliding.close();
+    await this.router.navigate(['/add-expense', row.id]);
+  }
+
+  askDelete(row: TransactionRow, sliding: IonItemSliding): void {
+    void sliding.close();
+    this.pendingDelete.set(row);
+  }
+
+  async onDeleteDismiss(event: { detail: { role?: string } }): Promise<void> {
+    const row = this.pendingDelete();
+    this.pendingDelete.set(null);
+
+    if (!row || event.detail.role !== 'destructive') {
+      return;
+    }
+
+    await this.transactions.delete(row.id);
+    await this.reload();
+    this.notify('Deleted from the ledger');
+  }
+
+  hideToast(): void {
+    this.toastOpen.set(false);
+  }
+
+  private async reload(): Promise<void> {
+    this.entries.set(await this.transactions.getAll());
+    this.loaded.set(true);
+  }
+
+  private notify(message: string): void {
+    this.toastMessage.set(message);
+    this.toastOpen.set(true);
   }
 }

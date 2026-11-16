@@ -314,3 +314,23 @@ ion-input.mono input.native-input {
   height: 7px;
   border-radius: 4px;
 }
+
+/* -------------------------------------------------------------- Overlays */
+
+/* Ionic paints alert internals in shadow DOM, so theme it with host vars. */
+ion-alert.tally-alert {
+  --background: var(--tally-surface);
+  --color: var(--tally-ink);
+  --max-width: 320px;
+  --backdrop-opacity: 0.34;
+  --ion-font-family: var(--font-mono);
+}
+
+ion-toast.tally-toast {
+  --background: var(--tally-ink);
+  --color: var(--tally-paper);
+  --border-radius: 4px;
+  --box-shadow: 3px 3px 0 var(--tally-persimmon);
+  --ion-font-family: var(--font-mono);
+  font-size: 11px;
+}
