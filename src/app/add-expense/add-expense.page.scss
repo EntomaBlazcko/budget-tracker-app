@@ -22,7 +22,7 @@
 }
 
 .amount-input {
-  width: 225px;
+  width: min(100%, 260px);
   min-height: 58px;
   font-family: var(--font-mono);
   font-size: 44px;
@@ -48,6 +48,44 @@
   font-size: 8px;
   letter-spacing: 0.1em;
   text-align: center;
+}
+
+.amount-card.field-invalid {
+  border-color: var(--tally-persimmon);
+  box-shadow: 4px 4px 0 var(--tally-persimmon);
+}
+
+/* ---------------------------------------------------------------- Errors */
+
+.field-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  margin: 0;
+  color: var(--tally-persimmon);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.07em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.field-error::before {
+  content: '!';
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 13px;
+  height: 13px;
+  font-size: 8px;
+  font-weight: 700;
+  border: 1.5px solid var(--tally-persimmon);
+  border-radius: 50%;
+}
+
+.save-error {
+  margin-top: 12px;
 }
 
 /* ---------------------------------------------------------------- Fields */

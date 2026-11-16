@@ -7,6 +7,12 @@ export const routes: Routes = [
     loadComponent: () => import('./add-expense/add-expense.page').then((m) => m.AddExpensePage),
   },
 
+  // Same form, prefilled, when editing an existing transaction.
+  {
+    path: 'add-expense/:id',
+    loadComponent: () => import('./add-expense/add-expense.page').then((m) => m.AddExpensePage),
+  },
+
   // Tab shell: Home, Activity, Budgets, Insights.
   {
     path: '',
