@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
+import { ApiService } from './api.service';
 import { BudgetService, DEFAULT_MONTHLY_LIMIT } from './budget.service';
 
 const { storage } = vi.hoisted(() => ({
@@ -20,6 +21,17 @@ describe('BudgetService', () => {
 
   beforeEach(() => {
     storage.clear();
+    TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: ApiService,
+          useValue: {
+            getMonthlyLimit: async () => null,
+            setMonthlyLimit: async () => null,
+          },
+        },
+      ],
+    });
     service = TestBed.inject(BudgetService);
   });
 

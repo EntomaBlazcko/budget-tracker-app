@@ -74,3 +74,11 @@ Thumbs.db
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# Local notes and secrets
+.env
+BUILD.md
+summary.md
+
+# REST backend runtime data
+/server/data/

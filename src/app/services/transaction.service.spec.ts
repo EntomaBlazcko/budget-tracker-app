@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import type { Transaction } from '../models/transaction.model';
 
+import { ApiService } from './api.service';
 import { TransactionService } from './transaction.service';
 
 const { storage } = vi.hoisted(() => ({
@@ -31,10 +32,38 @@ describe('TransactionService', () => {
 
   beforeEach(() => {
     storage.clear();
+    // Pretend the app has already run once, so the sample seeding does not
+    // affect the CRUD tests below.
+    storage.set('tally.transactions', '[]');
+    TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: ApiService,
+          useValue: {
+            listTransactions: async () => null,
+            getTransaction: async () => null,
+            createTransaction: async () => null,
+            updateTransaction: async () => null,
+            deleteTransaction: async () => null,
+            getMonthlyLimit: async () => null,
+            setMonthlyLimit: async () => null,
+          },
+        },
+      ],
+    });
     service = TestBed.inject(TransactionService);
   });
 
-  it('starts with an empty ledger', async () => {
+  it('seeds two sample transactions on first run', async () => {
+    storage.clear();
+
+    const all = await service.getAll();
+
+    expect(all).toHaveLength(2);
+    expect(all.map((transaction) => transaction.type).sort()).toEqual(['expense', 'income']);
+  });
+
+  it('does not reseed samples after the ledger is emptied', async () => {
     await expect(service.getAll()).resolves.toEqual([]);
   });
 

@@ -2,9 +2,10 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   IonAlert,
+  IonButton,
+  IonButtons,
   IonCard,
   IonCardContent,
-  IonChip,
   IonContent,
   IonHeader,
   IonIcon,
@@ -14,6 +15,7 @@ import {
   IonItemSliding,
   IonLabel,
   IonList,
+  IonModal,
   IonNote,
   IonSegment,
   IonSegmentButton,
@@ -39,6 +41,7 @@ import {
 import { categoryStyle } from '../models/category.model';
 import type { Transaction } from '../models/transaction.model';
 import { TransactionService } from '../services/transaction.service';
+import { VibrationService } from '../services/vibration.service';
 
 type TransactionFilter = 'all' | 'expenses' | 'income';
 
@@ -49,6 +52,7 @@ interface TransactionRow {
   categoryClass: string;
   icon: string;
   location?: string;
+  receiptPhoto?: string;
   amount: string;
   income: boolean;
 }
@@ -81,6 +85,7 @@ function toRow(transaction: Transaction): TransactionRow {
     categoryClass: style.colorClass,
     icon: style.icon,
     location: transaction.location?.trim() || undefined,
+    receiptPhoto: transaction.receiptPhoto,
     amount: formatAmount(transaction),
     income: transaction.type === 'income',
   };
@@ -163,13 +168,16 @@ function groupByDay(transactions: Transaction[], filter: TransactionFilter): Tra
     IonItemOptions,
     IonItemOption,
     IonIcon,
-    IonChip,
     IonAlert,
     IonToast,
+    IonButton,
+    IonButtons,
+    IonModal,
   ],
 })
 export class ActivityPage {
   private readonly transactions = inject(TransactionService);
+  private readonly vibration = inject(VibrationService);
   private readonly router = inject(Router);
 
   readonly filter = signal<TransactionFilter>('all');
@@ -178,6 +186,7 @@ export class ActivityPage {
   readonly pendingDelete = signal<TransactionRow | null>(null);
   readonly toastOpen = signal(false);
   readonly toastMessage = signal('');
+  readonly photoSrc = signal<string | null>(null);
 
   readonly monthLabel = formatMonth(new Date());
   readonly deleteButtons: AlertButton[] = [
@@ -246,13 +255,33 @@ export class ActivityPage {
       return;
     }
 
-    await this.transactions.delete(row.id);
+    await this.vibration.warning();
+
+    const deleted = await this.transactions.delete(row.id);
     await this.reload();
+
+    if (!deleted) {
+      await this.vibration.error();
+      this.notify('That entry is already gone');
+      return;
+    }
+
+    await this.vibration.success();
     this.notify('Deleted from the ledger');
   }
 
   hideToast(): void {
     this.toastOpen.set(false);
+  }
+
+  viewReceipt(row: TransactionRow): void {
+    if (row.receiptPhoto) {
+      this.photoSrc.set(row.receiptPhoto);
+    }
+  }
+
+  closeReceipt(): void {
+    this.photoSrc.set(null);
   }
 
   private async reload(): Promise<void> {

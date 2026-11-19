@@ -16,12 +16,23 @@ async function fillAmount(page: Page, amount: string): Promise<void> {
   await page.getByRole('textbox', { name: 'Expense amount' }).fill(amount);
 }
 
-test.beforeEach(async ({ page }) => {
+test('shows two sample transactions on first run', async ({ page }) => {
   await page.addInitScript(() => window.localStorage.clear());
   await page.goto('/activity');
+
+  await expect(page.locator('ion-item-sliding:visible')).toHaveCount(2);
+  await expect(page.getByText('Lunch at Jollibee')).toBeVisible();
+  await expect(page.getByText('Salary deposit')).toBeVisible();
 });
 
 test('adds, edits, and deletes a ledger entry', async ({ page }) => {
+  // Start with a saved empty ledger so the first-run samples do not appear.
+  await page.addInitScript(() => {
+    window.localStorage.clear();
+    window.localStorage.setItem('CapacitorStorage.tally.transactions', '[]');
+  });
+  await page.goto('/activity');
+
   await expect(page.getByRole('heading', { name: 'No transactions yet' })).toBeVisible();
 
   // --- Add ---------------------------------------------------------------

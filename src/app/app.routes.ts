@@ -13,7 +13,7 @@ export const routes: Routes = [
     loadComponent: () => import('./add-expense/add-expense.page').then((m) => m.AddExpensePage),
   },
 
-  // Tab shell: Home, Activity, Budgets, Insights.
+  // Tab shell: Home, Activity, Budgets.
   {
     path: '',
     loadComponent: () => import('./tabs/tabs.page').then((m) => m.TabsPage),
@@ -34,10 +34,6 @@ export const routes: Routes = [
       {
         path: 'budgets',
         loadComponent: () => import('./budgets/budgets.page').then((m) => m.BudgetsPage),
-      },
-      {
-        path: 'insights',
-        loadComponent: () => import('./insights/insights.page').then((m) => m.InsightsPage),
       },
     ],
   },

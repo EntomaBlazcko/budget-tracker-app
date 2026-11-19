@@ -5,6 +5,7 @@ import type { IonItemSliding, SegmentCustomEvent } from '@ionic/angular';
 
 import type { Transaction } from '../models/transaction.model';
 import { TransactionService } from '../services/transaction.service';
+import { VibrationService } from '../services/vibration.service';
 
 import { ActivityPage } from './activity.page';
 
@@ -14,6 +15,12 @@ const transactions = {
   add: vi.fn(),
   update: vi.fn(),
   delete: vi.fn(),
+};
+
+const vibration = {
+  warning: vi.fn(),
+  success: vi.fn(),
+  error: vi.fn(),
 };
 
 function isoOffset(days: number): string {
@@ -33,6 +40,7 @@ const entries: Transaction[] = [
     category: 'Food',
     date: isoOffset(0),
     note: 'Lunch at Jollibee',
+    receiptPhoto: 'data:image/jpeg;base64,abc123',
   },
   {
     id: 'income-1',
@@ -62,7 +70,11 @@ describe('ActivityPage', () => {
     transactions.delete.mockResolvedValue(true);
 
     TestBed.configureTestingModule({
-      providers: [provideRouter([]), { provide: TransactionService, useValue: transactions }],
+      providers: [
+        provideRouter([]),
+        { provide: TransactionService, useValue: transactions },
+        { provide: VibrationService, useValue: vibration },
+      ],
     });
 
     fixture = TestBed.createComponent(ActivityPage);
@@ -106,6 +118,8 @@ describe('ActivityPage', () => {
 
     expect(transactions.delete).toHaveBeenCalledWith('expense-1');
     expect(transactions.getAll).toHaveBeenCalledTimes(2);
+    expect(vibration.warning).toHaveBeenCalled();
+    expect(vibration.success).toHaveBeenCalled();
   });
 
   it('opens the form for the transaction being edited', async () => {
@@ -116,5 +130,25 @@ describe('ActivityPage', () => {
 
     expect(sliding.close).toHaveBeenCalled();
     expect(navigate).toHaveBeenCalledWith(['/add-expense', 'expense-1']);
+  });
+
+  it('opens and closes a receipt photo', () => {
+    const row = component.days()[0].rows[0];
+
+    expect(row.receiptPhoto).toBe('data:image/jpeg;base64,abc123');
+
+    component.viewReceipt(row);
+    expect(component.photoSrc()).toBe('data:image/jpeg;base64,abc123');
+
+    component.closeReceipt();
+    expect(component.photoSrc()).toBeNull();
+  });
+
+  it('ignores rows without a receipt photo', () => {
+    const row = component.days()[0].rows[1];
+
+    component.viewReceipt(row);
+
+    expect(component.photoSrc()).toBeNull();
   });
 });

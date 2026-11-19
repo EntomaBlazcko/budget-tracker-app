@@ -1,11 +1,11 @@
-<ion-header class="tally-header">
+<ion-header class="app-header">
   <ion-toolbar>
     <ion-title>Activity</ion-title>
-    <ion-note slot="end" class="header-note mono">{{ monthLabel }}</ion-note>
+    <ion-note slot="end">{{ monthLabel }}</ion-note>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content>
   <ion-segment [value]="filter()" (ionChange)="setFilter($event)" class="tally-segment">
     <ion-segment-button value="all">
       <ion-label>All</ion-label>
@@ -20,22 +20,20 @@
 
   <div class="activity-pad">
     @if (loaded() && days().length === 0) {
-    <ion-card class="tally-card empty-card">
+    <ion-card class="tally-card">
       <ion-card-content class="empty-body">
-        <div class="empty-icon">
-          <ion-icon name="receipt-outline" aria-hidden="true"></ion-icon>
-        </div>
-        <h2 class="empty-title">{{ emptyTitle() }}</h2>
-        <p class="empty-copy mono">{{ emptyCopy() }}</p>
+        <ion-icon name="receipt-outline" aria-hidden="true"></ion-icon>
+        <h2>{{ emptyTitle() }}</h2>
+        <p>{{ emptyCopy() }}</p>
       </ion-card-content>
     </ion-card>
     } @for (day of days(); track day.date) {
     <div class="day-head">
-      <span class="day-label mono">{{ day.label }}</span>
-      <span class="day-count mono"> {{ day.rows.length }} {{ day.rows.length === 1 ? 'ITEM' : 'ITEMS' }} </span>
+      <span>{{ day.label }}</span>
+      <span class="day-count">{{ day.rows.length }} {{ day.rows.length === 1 ? 'item' : 'items' }}</span>
     </div>
 
-    <div class="day-sheet tally-card">
+    <ion-card class="tally-card day-sheet">
       <ion-list lines="none" class="receipt-list day-list">
         @for (row of day.rows; track row.id) {
         <ion-item-sliding #sliding>
@@ -45,38 +43,41 @@
             </div>
 
             <ion-label>
-              <h2 class="item-name">{{ row.title }}</h2>
-              <div class="item-meta">
-                <ion-chip [class]="'stamp-chip ' + row.categoryClass">{{ row.category }}</ion-chip>
-                @if (row.location) {
-                <ion-note class="mono item-date">{{ row.location }}</ion-note>
-                }
-              </div>
+              <h3>{{ row.title }}</h3>
+              <p>
+                <span [class]="'cat-badge ' + row.categoryClass">{{ row.category }}</span>
+                @if (row.receiptPhoto) {
+                <ion-icon
+                  class="receipt-flag"
+                  name="receipt-outline"
+                  role="button"
+                  tabindex="0"
+                  aria-label="View receipt"
+                  (click)="viewReceipt(row)"
+                  (keydown.enter)="viewReceipt(row)"
+                  (keydown.space)="viewReceipt(row)"
+                ></ion-icon>
+                } @if (row.location) { · {{ row.location }} }
+              </p>
             </ion-label>
 
-            <div slot="end" class="end-col">
-              <span class="item-amount mono" [class.income]="row.income">{{ row.amount }}</span>
-            </div>
+            <span slot="end" class="item-amount mono" [class.income]="row.income">{{ row.amount }}</span>
           </ion-item>
 
           <ion-item-options side="end">
             <ion-item-option class="opt-edit" (click)="edit(row, sliding)">
-              <div class="opt-inner">
-                <ion-icon name="create-outline" aria-hidden="true"></ion-icon>
-                <span>Edit</span>
-              </div>
+              <ion-icon name="create-outline" aria-hidden="true"></ion-icon>
+              <span>Edit</span>
             </ion-item-option>
             <ion-item-option class="opt-delete" (click)="askDelete(row, sliding)">
-              <div class="opt-inner">
-                <ion-icon name="trash-outline" aria-hidden="true"></ion-icon>
-                <span>Delete</span>
-              </div>
+              <ion-icon name="trash-outline" aria-hidden="true"></ion-icon>
+              <span>Delete</span>
             </ion-item-option>
           </ion-item-options>
         </ion-item-sliding>
         }
       </ion-list>
-    </div>
+    </ion-card>
     }
   </div>
 </ion-content>
@@ -89,6 +90,25 @@
   [buttons]="deleteButtons"
   (didDismiss)="onDeleteDismiss($event)"
 ></ion-alert>
+
+<ion-modal [isOpen]="photoSrc() !== null" (didDismiss)="closeReceipt()">
+  <ng-template>
+    <ion-header class="app-header">
+      <ion-toolbar>
+        <ion-title>Receipt</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="closeReceipt()">Close</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content>
+      @if (photoSrc()) {
+      <img [src]="photoSrc()" alt="Receipt photo" class="receipt-photo" />
+      }
+    </ion-content>
+  </ng-template>
+</ion-modal>
 
 <ion-toast
   [isOpen]="toastOpen()"

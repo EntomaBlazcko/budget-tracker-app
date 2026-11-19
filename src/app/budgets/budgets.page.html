@@ -1,41 +1,99 @@
-<ion-header class="tally-header">
+<ion-header class="app-header">
   <ion-toolbar>
     <ion-title>Budgets</ion-title>
-    <ion-note slot="end" class="header-note mono">₱30,000 / MO</ion-note>
+    <ion-note slot="end">{{ selectedMonthLabel() }}</ion-note>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content>
   <div class="budget-pad">
-    <p class="budget-intro">Six paper envelopes, one monthly allowance. Tear one open only when you need it.</p>
+    <ion-item class="month-picker tally-card" lines="none">
+      <ion-icon slot="start" name="calendar-outline" aria-hidden="true"></ion-icon>
+      <ion-label>Month</ion-label>
+      <ion-select [value]="selectedMonth()" (ionChange)="setMonth($event)" interface="popover" aria-label="Month">
+        @for (option of monthOptions; track option.value) {
+        <ion-select-option [value]="option.value">{{ option.label }}</ion-select-option>
+        }
+      </ion-select>
+    </ion-item>
 
-    @for (envelope of envelopes; track envelope.name) {
-    <ion-card class="tally-card envelope" [class.envelope-over]="envelope.state === 'over'">
+    <ion-card class="tally-card budget-card">
       <ion-card-content>
-        <div class="env-head">
-          <div class="env-identity">
-            <div [class]="'cat-box ' + envelope.categoryClass">
-              <ion-icon [name]="envelope.icon" aria-hidden="true"></ion-icon>
-            </div>
-            <div>
-              <h2 class="env-name">{{ envelope.name }}</h2>
-              <span class="env-no mono">{{ envelope.number }}</span>
-            </div>
+        <p class="card-label">Spent this month</p>
+        <div class="budget-top">
+          <strong class="budget-spent mono">{{ spentLabel() }}</strong>
+          <ion-badge [class]="'state-badge ' + status()">{{ percentLabel() }}</ion-badge>
+        </div>
+
+        <ion-progress-bar [value]="barValue()" [class]="'budget-bar ' + status()"></ion-progress-bar>
+
+        <div class="budget-meta">
+          <span>Limit {{ limitLabel() }}</span>
+          <span>{{ percentLabel() }} used</span>
+        </div>
+
+        <p class="budget-message">{{ statusMessage() }}</p>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card class="tally-card limit-card">
+      <ion-card-content>
+        <p class="card-label">Monthly limit</p>
+        <div class="limit-line">
+          <span>₱</span>
+          <ion-input
+            class="limit-input mono"
+            inputmode="decimal"
+            aria-label="Monthly limit"
+            [value]="limitDraft()"
+            (ionInput)="onLimitInput($event)"
+          ></ion-input>
+          <ion-button size="small" (click)="saveLimit()">Save</ion-button>
+        </div>
+        @if (limitMessage()) {
+        <p class="limit-message" role="status">{{ limitMessage() }}</p>
+        }
+      </ion-card-content>
+    </ion-card>
+
+    <ion-item class="vibration-card" lines="none">
+      <ion-icon slot="start" name="pulse-outline" aria-hidden="true"></ion-icon>
+      <ion-label>
+        <h3>Vibration</h3>
+        <p>Buzz on save, delete and budget alerts</p>
+      </ion-label>
+      <ion-toggle [checked]="vibrationOn()" (ionChange)="setVibration($event)" aria-label="Vibration"></ion-toggle>
+    </ion-item>
+
+    <div class="section-head">
+      <h2 class="section-title">By category</h2>
+      <span class="section-count">{{ chartRows().length }} categories</span>
+    </div>
+
+    @if (chartRows().length === 0) {
+    <ion-card class="tally-card">
+      <ion-card-content class="empty-body">
+        <ion-icon name="pie-chart-outline" aria-hidden="true"></ion-icon>
+        <h2 class="empty-title">No spending yet</h2>
+        <p>Expenses for {{ selectedMonthLabel() }} will show up here.</p>
+      </ion-card-content>
+    </ion-card>
+    } @else {
+    <ion-card class="tally-card pie-card">
+      <ion-card-content>
+        <div class="chart-wrap">
+          <canvas #chartCanvas role="img" aria-label="Spending by category"></canvas>
+        </div>
+
+        <div class="legend-list">
+          @for (row of chartRows(); track row.name) {
+          <div class="legend-row">
+            <span class="legend-dot" [style.background]="row.color" aria-hidden="true"></span>
+            <span class="legend-name">{{ row.name }}</span>
+            <span class="legend-amount mono">{{ row.amountLabel }}</span>
+            <span class="legend-percent mono">{{ row.percentLabel }}</span>
           </div>
-
-          <ion-badge class="used-badge mono">{{ envelope.used }}</ion-badge>
-        </div>
-
-        <div class="env-figures mono">
-          <span class="env-spent">{{ envelope.spent }}</span>
-          <span class="env-limit">/ {{ envelope.limit }}</span>
-        </div>
-
-        <ion-progress-bar [value]="envelope.percent" [class]="'env-bar ' + envelope.categoryClass"></ion-progress-bar>
-
-        <div class="env-foot">
-          <span [class]="'status-stamp mono ' + envelope.state">{{ envelope.status }}</span>
-          <span class="env-caption mono">SPENT THIS MONTH</span>
+          }
         </div>
       </ion-card-content>
     </ion-card>

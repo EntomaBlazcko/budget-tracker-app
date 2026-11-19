@@ -1,22 +1,32 @@
-<ion-header class="tally-header">
+<ion-header class="app-header">
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button [defaultHref]="backHref" text=""></ion-back-button>
     </ion-buttons>
     <ion-title>{{ pageTitle }}</ion-title>
-    <ion-note slot="end" class="header-note mono">{{ isEditing ? 'EDITING' : 'DRAFT' }}</ion-note>
+    <ion-note slot="end">{{ isEditing ? 'Editing' : 'New' }}</ion-note>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content>
   <div class="page-pad add-pad">
-    <!-- Amount -->
+    <div class="field-block">
+      <span class="field-label">Type</span>
+      <ion-segment [value]="transactionType()" (ionChange)="setType($event)">
+        <ion-segment-button value="expense">
+          <ion-label>Expense</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="income">
+          <ion-label>Income</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+    </div>
+
     <ion-card class="tally-card amount-card" [class.field-invalid]="amountError !== null">
       <ion-card-content>
-        <span class="eyebrow">Amount</span>
-
+        <p class="card-label">Amount</p>
         <div class="amount-line">
-          <span class="peso mono">₱</span>
+          <span>₱</span>
           <ion-input
             class="amount-input mono"
             inputmode="decimal"
@@ -26,20 +36,14 @@
             (ionBlur)="markAmountTouched()"
           ></ion-input>
         </div>
-
-        <hr class="dashed-rule" />
-
         @if (amountError) {
-        <p class="field-error mono" role="alert">{{ amountError }}</p>
-        } @else {
-        <span class="amount-hint mono">PHP · TAP THE NUMBER TO EDIT</span>
+        <p class="field-error" role="alert">{{ amountError }}</p>
         }
       </ion-card-content>
     </ion-card>
 
-    <!-- Category -->
     <div class="field-block">
-      <span class="field-label mono">Category</span>
+      <span class="field-label">Category</span>
       <div class="chip-grid">
         @for (category of categoryOptions; track category) {
         <ion-chip
@@ -55,32 +59,28 @@
         </ion-chip>
         }
       </div>
-
       @if (categoryError) {
-      <p class="field-error mono" role="alert">{{ categoryError }}</p>
+      <p class="field-error" role="alert">{{ categoryError }}</p>
       }
     </div>
 
-    <!-- Note -->
     <div class="field-block">
-      <span class="field-label mono">Note</span>
+      <span class="field-label">Note</span>
       <ion-input
-        class="tally-field mono"
+        class="note-input"
         placeholder="What was this for?"
         aria-label="Note"
         [formControl]="form.controls.note"
       ></ion-input>
     </div>
 
-    <!-- Date -->
     <div class="field-block">
-      <span class="field-label mono">Date</span>
+      <span class="field-label">Date</span>
       <div class="date-box tally-card">
         <ion-icon name="calendar-outline" aria-hidden="true"></ion-icon>
         <ion-datetime-button datetime="expense-date"></ion-datetime-button>
       </div>
 
-      <!-- Ionic 9 no longer has a compact datetime, so the picker opens in a modal. -->
       <ion-modal [keepContentsMounted]="true">
         <ng-template>
           <ion-datetime
@@ -93,10 +93,16 @@
       </ion-modal>
     </div>
 
-    <!-- Receipt scan (visual only) -->
-    <ion-button expand="block" fill="outline" class="scan-btn">
+    @if (receiptPhoto()) {
+    <div class="receipt-preview tally-card">
+      <img [src]="receiptPhoto()" alt="Receipt preview" />
+      <ion-button fill="clear" size="small" class="remove-photo" (click)="removePhoto()">Remove photo</ion-button>
+    </div>
+    }
+
+    <ion-button expand="block" fill="outline" class="scan-btn" (click)="attachReceipt()">
       <ion-icon slot="start" name="camera-outline"></ion-icon>
-      Scan receipt
+      {{ receiptPhoto() ? 'Replace receipt' : 'Attach receipt' }}
     </ion-button>
 
     <ion-button expand="block" class="save-btn" [disabled]="submitting() || loading()" (click)="save()">
@@ -104,11 +110,9 @@
     </ion-button>
 
     @if (saveError()) {
-    <p class="field-error save-error mono" role="alert">{{ saveError() }}</p>
+    <p class="field-error save-error" role="alert">{{ saveError() }}</p>
     }
 
-    <p class="save-note mono">
-      {{ isEditing ? 'Editing an existing ledger entry' : 'Saved to the ledger · stored on this device' }}
-    </p>
+    <p class="save-note">Stored on this device</p>
   </div>
 </ion-content>

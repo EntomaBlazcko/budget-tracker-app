@@ -2,7 +2,9 @@ import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import type { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import {
+  AlertController,
   IonBackButton,
   IonButton,
   IonButtons,
@@ -15,17 +17,24 @@ import {
   IonHeader,
   IonIcon,
   IonInput,
+  IonLabel,
   IonModal,
   IonNote,
+  IonSegment,
+  IonSegmentButton,
   IonTitle,
   IonToolbar,
+  ToastController,
 } from '@ionic/angular';
+import type { SegmentCustomEvent } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { calendarOutline, cameraOutline } from 'ionicons/icons';
 
 import { CATEGORIES, categoryStyle, isCategory } from '../models/category.model';
 import type { NewTransaction, TransactionType } from '../models/transaction.model';
+import { BudgetService } from '../services/budget.service';
 import { TransactionService } from '../services/transaction.service';
+import { VibrationService } from '../services/vibration.service';
 
 /** Empty is left to Validators.required; anything else must parse above zero. */
 const positiveAmountValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
@@ -39,6 +48,12 @@ const positiveAmountValidator: ValidatorFn = (control: AbstractControl): Validat
   const amount = Number(raw);
   return Number.isFinite(amount) && amount > 0 ? null : { amount: true };
 };
+
+/** Capacitor throws when the user backs out of the picker; that is not a failure. */
+function isCancelled(error: unknown): boolean {
+  const message = error instanceof Error ? error.message : String(error);
+  return message.toLowerCase().includes('cancel');
+}
 
 function isoToday(): string {
   const now = new Date();
@@ -65,6 +80,9 @@ function isoToday(): string {
     IonCardContent,
     IonInput,
     IonChip,
+    IonLabel,
+    IonSegment,
+    IonSegmentButton,
     IonDatetime,
     IonDatetimeButton,
     IonIcon,
@@ -77,6 +95,10 @@ export class AddExpensePage {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly transactions = inject(TransactionService);
+  private readonly budget = inject(BudgetService);
+  private readonly vibration = inject(VibrationService);
+  private readonly toast = inject(ToastController);
+  private readonly alert = inject(AlertController);
 
   readonly editingId = signal<string | null>(null);
   readonly extraCategory = signal<string | null>(null);
@@ -85,6 +107,7 @@ export class AddExpensePage {
   readonly submitting = signal(false);
   readonly submitted = signal(false);
   readonly saveError = signal<string | null>(null);
+  readonly receiptPhoto = signal<string | null>(null);
 
   readonly form = this.fb.nonNullable.group({
     amount: ['', [Validators.required, positiveAmountValidator]],
@@ -104,7 +127,7 @@ export class AddExpensePage {
 
   get pageTitle(): string {
     if (!this.isEditing) {
-      return 'New expense';
+      return this.transactionType() === 'income' ? 'New income' : 'New expense';
     }
 
     return this.transactionType() === 'income' ? 'Edit income' : 'Edit expense';
@@ -124,8 +147,24 @@ export class AddExpensePage {
 
   /** Keeps an unusual stored category selectable when editing. */
   get categoryOptions(): string[] {
+    const base = this.transactionType() === 'income' ? ['Income'] : [...CATEGORIES];
     const extra = this.extraCategory();
-    return extra ? [...CATEGORIES, extra] : [...CATEGORIES];
+    return extra && !base.includes(extra) ? [...base, extra] : base;
+  }
+
+  setType(event: SegmentCustomEvent): void {
+    const value = event.detail.value;
+    if (value !== 'income' && value !== 'expense') {
+      return;
+    }
+
+    this.transactionType.set(value);
+
+    // Income entries use the Income category, so clear a category that no
+    // longer belongs to the selected type.
+    if (!this.categoryOptions.includes(this.form.controls.category.value)) {
+      this.form.controls.category.setValue(value === 'income' ? 'Income' : '');
+    }
   }
 
   get amountError(): string | null {
@@ -168,6 +207,46 @@ export class AddExpensePage {
     this.form.controls.amount.markAsTouched();
   }
 
+  /** Opens the camera or the gallery and stores the photo as a base64 string. */
+  async attachReceipt(): Promise<void> {
+    try {
+      const photo = await Camera.getPhoto({
+        quality: 50,
+        width: 800,
+        allowEditing: false,
+        resultType: CameraResultType.Base64,
+        source: CameraSource.Prompt,
+        promptLabelHeader: 'Attach receipt',
+        promptLabelPicture: 'Take a photo',
+        promptLabelPhoto: 'Choose from gallery',
+        promptLabelCancel: 'Cancel',
+      });
+
+      if (photo.base64String) {
+        this.receiptPhoto.set(`data:image/${photo.format};base64,${photo.base64String}`);
+      }
+    } catch (error) {
+      // The user closing the picker is not an error worth alerting about.
+      if (!isCancelled(error)) {
+        await this.showPermissionAlert();
+      }
+    }
+  }
+
+  removePhoto(): void {
+    this.receiptPhoto.set(null);
+  }
+
+  private async showPermissionAlert(): Promise<void> {
+    const alert = await this.alert.create({
+      header: 'Camera permission needed',
+      message: 'Allow camera and photo access in your device settings to attach a receipt.',
+      buttons: ['OK'],
+    });
+
+    await alert.present();
+  }
+
   async save(): Promise<void> {
     this.submitted.set(true);
     this.saveError.set(null);
@@ -188,27 +267,67 @@ export class AddExpensePage {
       category: value.category,
       date: value.date,
       note: value.note.trim(),
+      receiptPhoto: this.receiptPhoto() ?? undefined,
     };
 
     this.submitting.set(true);
+    const id = this.editingId();
     try {
-      const id = this.editingId();
       if (id) {
         const updated = await this.transactions.update({ id, ...payload });
         if (!updated) {
           this.saveError.set('This entry is no longer in the ledger.');
+          await this.vibration.error();
+          await this.showToast('Could not save transaction');
           return;
         }
       } else {
         await this.transactions.add(payload);
       }
 
+      // A new expense that goes past the monthly limit gets a stronger buzz.
+      const overBudget = !id && payload.type === 'expense' && (await this.isOverBudget(payload.date));
+      if (overBudget) {
+        await this.vibration.strong();
+      } else {
+        await this.vibration.success();
+      }
+
+      await this.showToast(id ? 'Transaction updated' : 'Transaction saved');
       await this.router.navigateByUrl('/activity', { replaceUrl: true });
     } catch {
       this.saveError.set('Could not save. Please try again.');
+      await this.vibration.error();
+      await this.showToast('Could not save transaction');
     } finally {
       this.submitting.set(false);
     }
+  }
+
+  private async isOverBudget(monthDate: string): Promise<boolean> {
+    const limit = await this.budget.getMonthlyLimit();
+    if (limit <= 0) {
+      return false;
+    }
+
+    const month = monthDate.slice(0, 7);
+    const spent = (await this.transactions.getAll())
+      .filter((transaction) => transaction.type === 'expense' && transaction.date.startsWith(month))
+      .reduce((total, transaction) => total + transaction.amount, 0);
+
+    return spent > limit;
+  }
+
+  private async showToast(message: string): Promise<void> {
+    const toast = await this.toast.create({
+      message,
+      duration: 1500,
+      position: 'top',
+      cssClass: 'tally-toast',
+    });
+
+    await toast.present();
+    await toast.onDidDismiss();
   }
 
   private async load(): Promise<void> {
@@ -227,6 +346,7 @@ export class AddExpensePage {
 
       this.editingId.set(transaction.id);
       this.transactionType.set(transaction.type);
+      this.receiptPhoto.set(transaction.receiptPhoto ?? null);
 
       if (!isCategory(transaction.category)) {
         this.extraCategory.set(transaction.category);
