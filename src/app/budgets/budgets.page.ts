@@ -60,7 +60,7 @@ const MONTHS = [
   'DECEMBER',
 ];
 
-// Same colors the rest of the app uses for each category.
+// Colors for the chart legend.
 const CATEGORY_COLORS: Record<string, string> = {
   Food: '#ff5a36',
   Transport: '#4d7cfe',
@@ -236,7 +236,7 @@ export class BudgetsPage implements OnDestroy {
     this.entries.set(entries);
     this.vibrationOn.set(vibrationOn);
 
-    // Let Angular render the canvas before Chart.js looks for it.
+    // Draw after the canvas is on screen.
     setTimeout(() => this.drawChart());
   }
 

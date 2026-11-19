@@ -1,3 +1,5 @@
+/* Tabs page - bottom bar and add button styles. */
+
 ion-tab-bar {
   --background: var(--tally-surface);
   --color: var(--tally-ink-soft);
@@ -24,7 +26,7 @@ ion-tab-button ion-label {
   text-transform: uppercase;
 }
 
-/* Add button floats above the tab bar on the right so it never covers the tabs. */
+/* Add button floats above the tabs on the right. */
 .dock-fab {
   position: fixed;
   right: 16px;

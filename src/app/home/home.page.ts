@@ -142,7 +142,7 @@ export class HomePage {
     return `${MONTHS[now.getMonth()]} ${now.getFullYear()}`;
   }
 
-  // Only the current month counts toward the dashboard totals.
+  // Only this month's entries count.
   private get monthKey(): string {
     return isoDate(new Date()).slice(0, 7);
   }

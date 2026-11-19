@@ -37,7 +37,7 @@ import { BudgetService } from '../services/budget.service';
 import { TransactionService } from '../services/transaction.service';
 import { VibrationService } from '../services/vibration.service';
 
-/** Empty is left to Validators.required; anything else must parse above zero. */
+// Empty uses required; other values must be a number above zero.
 const positiveAmountValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
   const raw = String(control.value ?? '')
     .replace(/,/g, '')
@@ -50,7 +50,7 @@ const positiveAmountValidator: ValidatorFn = (control: AbstractControl): Validat
   return Number.isFinite(amount) && amount > 0 ? null : { amount: true };
 };
 
-/** Capacitor throws when the user backs out of the picker; that is not a failure. */
+// Ignore the error when the user cancels the photo picker.
 function isCancelled(error: unknown): boolean {
   const message = error instanceof Error ? error.message : String(error);
   return message.toLowerCase().includes('cancel');
@@ -146,7 +146,7 @@ export class AddExpensePage {
     return this.isEditing ? '/activity' : '/home';
   }
 
-  /** Keeps an unusual stored category selectable when editing. */
+  // Keep saved categories selectable when editing.
   get categoryOptions(): string[] {
     const base = this.transactionType() === 'income' ? ['Income'] : [...CATEGORIES];
     const extra = this.extraCategory();
@@ -161,8 +161,7 @@ export class AddExpensePage {
 
     this.transactionType.set(value);
 
-    // Income entries use the Income category, so clear a category that no
-    // longer belongs to the selected type.
+    // Clear a category that does not fit the new type.
     if (!this.categoryOptions.includes(this.form.controls.category.value)) {
       this.form.controls.category.setValue(value === 'income' ? 'Income' : '');
     }
@@ -208,7 +207,7 @@ export class AddExpensePage {
     this.form.controls.amount.markAsTouched();
   }
 
-  /** Opens the camera or the gallery and stores the photo as a base64 string. */
+  // Take or pick a receipt photo and keep it as base64.
   async attachReceipt(): Promise<void> {
     try {
       const photo = await Camera.getPhoto({
@@ -227,7 +226,7 @@ export class AddExpensePage {
         this.receiptPhoto.set(`data:image/${photo.format};base64,${photo.base64String}`);
       }
     } catch (error) {
-      // The user closing the picker is not an error worth alerting about.
+      // Cancelling the picker is not an error.
       if (!isCancelled(error)) {
         await this.showPermissionAlert();
       }
@@ -286,7 +285,7 @@ export class AddExpensePage {
         await this.transactions.add(payload);
       }
 
-      // A new expense that goes past the monthly limit gets a stronger buzz.
+      // Buzz harder when a new expense goes over the limit.
       const overBudget = !id && payload.type === 'expense' && (await this.isOverBudget(payload.date));
       if (overBudget) {
         await this.vibration.strong();
