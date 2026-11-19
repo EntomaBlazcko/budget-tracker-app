@@ -4,6 +4,12 @@ const config: CapacitorConfig = {
   appId: 'com.tally.budgettracker',
   appName: 'Tally',
   webDir: 'www',
+  // Serve the local bundle over HTTP so the WebView can call the plain-HTTP
+  // REST API on the LAN without mixed-content blocking.
+  server: {
+    androidScheme: 'http',
+    cleartext: true,
+  },
 };
 
 export default config;

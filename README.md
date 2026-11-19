@@ -62,14 +62,17 @@ Data is stored in `server/data/*.json`, which is generated on first run and giti
 
 ### Pointing the Android app at the API
 
-`src/app/services/api.config.ts` defaults to `http://localhost:3000/api`. On a physical phone,
-`localhost` means the phone itself, so change it to your computer's LAN IP, for example:
+`src/app/services/api.config.ts` points at the development PC's LAN IP so the REST demo works on a
+physical phone. `localhost` would mean the phone itself, so if the PC gets a different IP, change:
 
 ```ts
-export const API_BASE_URL = 'http://192.168.1.12:3000/api';
+export const API_BASE_URL = 'http://192.168.100.17:3000/api';
 ```
 
-Keep the phone on the same Wi-Fi and make sure the API is reachable from the device.
+Keep the phone on the same Wi-Fi and make sure the API is reachable from the device. Plain HTTP is
+allowed by `server.androidScheme = 'http'` + `server.cleartext = true` in `capacitor.config.ts` and
+`android:usesCleartextTraffic="true"` in `AndroidManifest.xml`; without these, the WebView blocks
+the API as mixed content.
 
 ## Build and test
 

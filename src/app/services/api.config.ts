@@ -1,8 +1,10 @@
 /**
  * Base URL of the REST backend.
  *
- * Web dev: leave as-is and run `npm run start:api` on this machine.
- * Physical Android device: change `localhost` to your computer's LAN IP,
- * e.g. `http://192.168.1.12:3000/api`, and keep the phone on the same Wi-Fi.
+ * Web dev: `npm run start:api` serves http://localhost:3000/api on this machine.
+ * Physical Android device: the app points at the development PC's LAN IP so the
+ * REST demo works on the phone. Change this if the PC gets a different IP, and
+ * keep the phone on the same Wi-Fi. Plain HTTP is allowed in the debug build by
+ * `android:usesCleartextTraffic="true"` in AndroidManifest.xml.
  */
-export const API_BASE_URL = 'http://localhost:3000/api';
+export const API_BASE_URL = 'http://192.168.100.17:3000/api';
