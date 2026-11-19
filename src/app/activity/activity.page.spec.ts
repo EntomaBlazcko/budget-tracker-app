@@ -1,7 +1,7 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { Router, provideRouter } from '@angular/router';
-import type { IonItemSliding, SegmentCustomEvent } from '@ionic/angular';
+import type { SegmentCustomEvent } from '@ionic/angular';
 
 import type { Transaction } from '../models/transaction.model';
 import { TransactionService } from '../services/transaction.service';
@@ -124,11 +124,9 @@ describe('ActivityPage', () => {
 
   it('opens the form for the transaction being edited', async () => {
     const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
-    const sliding = { close: vi.fn().mockResolvedValue(undefined) } as unknown as IonItemSliding;
 
-    await component.edit(component.days()[0].rows[0], sliding);
+    await component.edit(component.days()[0].rows[0]);
 
-    expect(sliding.close).toHaveBeenCalled();
     expect(navigate).toHaveBeenCalledWith(['/add-expense', 'expense-1']);
   });
 

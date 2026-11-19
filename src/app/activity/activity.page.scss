@@ -65,11 +65,19 @@
   gap: 4px;
 }
 
+.row-edit,
 .row-delete {
-  --color: var(--tally-persimmon);
   --padding-start: 4px;
   --padding-end: 4px;
   margin: 0;
+}
+
+.row-edit {
+  --color: var(--tally-primary);
+}
+
+.row-delete {
+  --color: var(--tally-persimmon);
 }
 
 .receipt-photo {

@@ -11,9 +11,6 @@ import {
   IonHeader,
   IonIcon,
   IonItem,
-  IonItemOption,
-  IonItemOptions,
-  IonItemSliding,
   IonLabel,
   IonList,
   IonModal,
@@ -164,10 +161,7 @@ function groupByDay(transactions: Transaction[], filter: TransactionFilter): Tra
     IonCard,
     IonCardContent,
     IonList,
-    IonItemSliding,
     IonItem,
-    IonItemOptions,
-    IonItemOption,
     IonIcon,
     IonAlert,
     IonToast,
@@ -238,13 +232,11 @@ export class ActivityPage {
     }
   }
 
-  async edit(row: TransactionRow, sliding: IonItemSliding): Promise<void> {
-    await sliding.close();
+  async edit(row: TransactionRow): Promise<void> {
     await this.router.navigate(['/add-expense', row.id]);
   }
 
-  askDelete(row: TransactionRow, sliding: IonItemSliding): void {
-    void sliding.close();
+  askDelete(row: TransactionRow): void {
     this.pendingDelete.set(row);
   }
 

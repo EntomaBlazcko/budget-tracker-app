@@ -36,56 +36,46 @@
     <ion-card class="tally-card day-sheet">
       <ion-list lines="none" class="receipt-list day-list">
         @for (row of day.rows; track row.id) {
-        <ion-item-sliding #sliding>
-          <ion-item class="tx-item">
-            <div slot="start" [class]="'cat-box ' + row.categoryClass">
-              <ion-icon [name]="row.icon" aria-hidden="true"></ion-icon>
-            </div>
+        <ion-item class="tx-item">
+          <div slot="start" [class]="'cat-box ' + row.categoryClass">
+            <ion-icon [name]="row.icon" aria-hidden="true"></ion-icon>
+          </div>
 
-            <ion-label>
-              <h3>{{ row.title }}</h3>
-              <p>
-                <span [class]="'cat-badge ' + row.categoryClass">{{ row.category }}</span>
-                @if (row.receiptPhoto) {
-                <ion-icon
-                  class="receipt-flag"
-                  name="receipt-outline"
-                  role="button"
-                  tabindex="0"
-                  aria-label="View receipt"
-                  (click)="viewReceipt(row)"
-                  (keydown.enter)="viewReceipt(row)"
-                  (keydown.space)="viewReceipt(row)"
-                ></ion-icon>
-                } @if (row.location) { · {{ row.location }} }
-              </p>
-            </ion-label>
+          <ion-label>
+            <h3>{{ row.title }}</h3>
+            <p>
+              <span [class]="'cat-badge ' + row.categoryClass">{{ row.category }}</span>
+              @if (row.receiptPhoto) {
+              <ion-icon
+                class="receipt-flag"
+                name="receipt-outline"
+                role="button"
+                tabindex="0"
+                aria-label="View receipt"
+                (click)="viewReceipt(row)"
+                (keydown.enter)="viewReceipt(row)"
+                (keydown.space)="viewReceipt(row)"
+              ></ion-icon>
+              } @if (row.location) { · {{ row.location }} }
+            </p>
+          </ion-label>
 
-            <div slot="end" class="row-actions">
-              <span class="item-amount mono" [class.income]="row.income">{{ row.amount }}</span>
-              <ion-button
-                class="row-delete"
-                fill="clear"
-                size="small"
-                aria-label="Delete transaction"
-                (click)="askDelete(row, sliding)"
-              >
-                <ion-icon name="trash-outline" aria-hidden="true"></ion-icon>
-              </ion-button>
-            </div>
-          </ion-item>
-
-          <ion-item-options side="end">
-            <ion-item-option class="opt-edit" (click)="edit(row, sliding)">
+          <div slot="end" class="row-actions">
+            <span class="item-amount mono" [class.income]="row.income">{{ row.amount }}</span>
+            <ion-button class="row-edit" fill="clear" size="small" aria-label="Edit transaction" (click)="edit(row)">
               <ion-icon name="create-outline" aria-hidden="true"></ion-icon>
-              <span>Edit</span>
-            </ion-item-option>
-            <ion-item-option class="opt-delete" (click)="askDelete(row, sliding)">
+            </ion-button>
+            <ion-button
+              class="row-delete"
+              fill="clear"
+              size="small"
+              aria-label="Delete transaction"
+              (click)="askDelete(row)"
+            >
               <ion-icon name="trash-outline" aria-hidden="true"></ion-icon>
-              <span>Delete</span>
-            </ion-item-option>
-          </ion-item-options>
-        </ion-item-sliding>
+            </ion-button>
+          </div>
+        </ion-item>
         }
       </ion-list>
     </ion-card>
