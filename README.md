@@ -1,4 +1,4 @@
-# Taly - Pocket Tracker
+# Tally - Pocket Tracker
 
 A simple mobile budget tracker built with **Ionic 9 + Angular 22 standalone components** and
 **Capacitor 8**. It runs in the browser and as an Android app. Transactions and the monthly
@@ -25,14 +25,6 @@ This is a **solo project**, so one student handles every role from the course br
 | Development and Integration of Platform-Specific Features | `@capacitor/haptics` via `src/app/services/vibration.service.ts` |
 | Development and Integration of RESTful APIs (Client Side) | `src/app/services/api.service.ts` + `api.config.ts` |
 | Backend Server Development and API Endpoint Implementation | `server/index.js` |
-
-## Screenshots
-
-> Add real device captures before submitting.
-
-| Dashboard | Activity | Budget | Add / Edit |
-| --- | --- | --- | --- |
-| ![Dashboard](docs/screenshots/home.png) | ![Activity](docs/screenshots/activity.png) | ![Budget](docs/screenshots/budgets.png) | ![Add transaction](docs/screenshots/add-expense.png) |
 
 ## Run locally
 
