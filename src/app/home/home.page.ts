@@ -1,3 +1,4 @@
+// Home page - shows this month's totals and recent transactions.
 import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {

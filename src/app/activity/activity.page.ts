@@ -1,3 +1,4 @@
+// Activity page - lists, edits and deletes transactions.
 import { Component, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import {

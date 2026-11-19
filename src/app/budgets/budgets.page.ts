@@ -1,3 +1,4 @@
+// Budgets page - monthly limit, progress and spending chart.
 import { Component, ViewChild, computed, inject, signal } from '@angular/core';
 import type { ElementRef, OnDestroy } from '@angular/core';
 import {

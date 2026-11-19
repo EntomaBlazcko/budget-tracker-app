@@ -1,3 +1,4 @@
+// Tabs page - bottom navigation and the add button.
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { IonFab, IonFabButton, IonIcon, IonLabel, IonTabBar, IonTabButton, IonTabs } from '@ionic/angular';

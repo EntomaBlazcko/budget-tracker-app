@@ -1,3 +1,4 @@
+// Add/Edit page - saves an income or expense, with an optional photo.
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import type { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';

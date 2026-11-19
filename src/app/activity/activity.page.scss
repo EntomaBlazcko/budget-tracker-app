@@ -59,6 +59,19 @@
   color: var(--tally-mint);
 }
 
+.row-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.row-delete {
+  --color: var(--tally-persimmon);
+  --padding-start: 4px;
+  --padding-end: 4px;
+  margin: 0;
+}
+
 .receipt-photo {
   display: block;
   width: 100%;

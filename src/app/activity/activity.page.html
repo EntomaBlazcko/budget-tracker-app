@@ -61,7 +61,18 @@
               </p>
             </ion-label>
 
-            <span slot="end" class="item-amount mono" [class.income]="row.income">{{ row.amount }}</span>
+            <div slot="end" class="row-actions">
+              <span class="item-amount mono" [class.income]="row.income">{{ row.amount }}</span>
+              <ion-button
+                class="row-delete"
+                fill="clear"
+                size="small"
+                aria-label="Delete transaction"
+                (click)="askDelete(row, sliding)"
+              >
+                <ion-icon name="trash-outline" aria-hidden="true"></ion-icon>
+              </ion-button>
+            </div>
           </ion-item>
 
           <ion-item-options side="end">
