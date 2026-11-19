@@ -165,8 +165,16 @@
   border-radius: 50%;
 }
 
+.legend-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .legend-amount {
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .legend-percent {

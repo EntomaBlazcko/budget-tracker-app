@@ -56,7 +56,9 @@
                 (keydown.enter)="viewReceipt(row)"
                 (keydown.space)="viewReceipt(row)"
               ></ion-icon>
-              } @if (row.location) { · {{ row.location }} }
+              } @if (row.location) {
+              <span class="row-location">· {{ row.location }}</span>
+              }
             </p>
           </ion-label>
 

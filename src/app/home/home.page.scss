@@ -46,21 +46,34 @@
   padding: 0 14px;
 }
 
+.receipt-list ion-label {
+  min-width: 0;
+  overflow: hidden;
+}
+
 .receipt-list ion-label h3 {
   margin: 0 0 3px;
+  overflow: hidden;
   font-size: 14px;
   font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .receipt-list ion-label p {
   margin: 0;
+  overflow: hidden;
   color: var(--tally-ink-soft);
   font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .item-amount {
+  flex: 0 0 auto;
   font-size: 14px;
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .item-amount.income {
