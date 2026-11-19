@@ -1,4 +1,4 @@
-# Tally — Budget Tracker
+# Taly - Pocket Tracker
 
 A simple mobile budget tracker built with **Ionic 9 + Angular 22 standalone components** and
 **Capacitor 8**. It runs in the browser and as an Android app. Transactions and the monthly
